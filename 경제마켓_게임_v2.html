@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🛍️ 경제 마켓 - 재화 분류 게임</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Gaegu:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8F0; --peach: #FFB997; --peach-light: #FFD9C7;
+    --coral: #FF7B5C; --coral-dark: #E85D3F;
+    --mint: #6ECFB5;  --mint-dark: #4AB89C;
+    --sky: #7CC4F0;   --sky-dark: #5AA8D8;
+    --lemon: #FFE566; --lavender: #C4A8FF; --lavender-dark: #A080E8;
+    --text-dark: #2D2D2D; --text-mid: #5A5A5A; --text-light: #999;
+    --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-card: 0 6px 24px rgba(0,0,0,0.12);
+    --shadow-float: 0 12px 40px rgba(0,0,0,0.18);
+    --r-lg: 24px; --r-md: 16px; --r-sm: 10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;overflow-x:hidden;position:relative}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 10% 20%,rgba(255,185,151,.3) 0%,transparent 40%),radial-gradient(circle at 90% 80%,rgba(110,207,181,.25) 0%,transparent 40%),radial-gradient(circle at 50% 50%,rgba(255,229,102,.15) 0%,transparent 60%);pointer-events:none;z-index:0}
+  .screen{display:none;position:relative;z-index:1;min-height:100vh;animation:fadeIn .4s ease}
+  .screen.active{display:flex;flex-direction:column}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pop{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  @keyframes swipeOutLeft{to{transform:translateX(-150%) rotate(-15deg);opacity:0}}
+  @keyframes swipeOutRight{to{transform:translateX(150%) rotate(15deg);opacity:0}}
+  @keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+  @keyframes correctPulse{0%{background:rgba(110,207,181,.4)}100%{background:white}}
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ── INTRO ── */
+  #screen-intro{align-items:center;justify-content:center;padding:28px 24px;gap:0;text-align:center}
+  .intro-deco{font-size:72px;animation:float 3s ease-in-out infinite;display:block;margin-bottom:6px}
+  .game-title{font-family:'Gaegu',cursive;font-size:44px;color:var(--coral);line-height:1;text-shadow:3px 3px 0 rgba(255,123,92,.2)}
+  .game-subtitle{font-size:13px;color:var(--text-mid);margin-bottom:28px;background:white;display:inline-block;padding:4px 14px;border-radius:20px;border:2px solid var(--peach)}
+  .intro-card{background:white;border-radius:var(--r-lg);padding:24px;width:100%;max-width:400px;box-shadow:var(--shadow-card);margin-bottom:16px;border:2px solid var(--peach-light)}
+  .intro-card h3{font-size:14px;font-weight:700;color:var(--text-mid);margin-bottom:10px}
+  .nickname-input{width:100%;padding:13px 18px;border:2.5px solid var(--peach);border-radius:var(--r-md);font-size:18px;font-family:'Noto Sans KR',sans-serif;font-weight:700;background:var(--cream);color:var(--text-dark);outline:none;transition:all .2s;text-align:center}
+  .nickname-input:focus{border-color:var(--coral);background:white;box-shadow:0 0 0 4px rgba(255,123,92,.12)}
+  .nickname-input::placeholder{color:var(--text-light);font-weight:400}
+  .input-msg{font-size:12px;margin-top:8px;min-height:18px;transition:all .2s}
+  .btn-start{width:100%;max-width:400px;padding:17px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;border:none;border-radius:var(--r-md);font-size:19px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(255,123,92,.4),0 3px 0 var(--coral-dark);letter-spacing:1px;margin-bottom:16px}
+  .btn-start:hover{transform:translateY(-2px)}
+  .btn-start:active{transform:translateY(1px)}
+  .btn-start:disabled{background:#ccc;box-shadow:0 3px 0 #aaa;cursor:not-allowed;transform:none}
+  .ranking-preview{width:100%;max-width:400px;background:white;border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow-soft);border:2px solid var(--peach-light)}
+  .ranking-preview h4{font-size:13px;font-weight:700;color:var(--text-mid);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .mini-rank-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--peach-light);font-size:13px}
+  .mini-rank-item:last-child{border:none}
+  .mini-rank-num{font-weight:900;color:var(--coral);width:22px}
+  .mini-rank-name{flex:1;font-weight:500}
+  .mini-rank-score{font-weight:700;color:var(--mint-dark)}
+
+  /* ── TUTORIAL ── */
+  #screen-tutorial{padding:24px;align-items:center;gap:14px}
+  .tut-title{font-family:'Gaegu',cursive;font-size:28px;color:var(--coral);text-align:center}
+  .game-card-preview{background:white;border-radius:var(--r-md);padding:15px 18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow-soft);border:2px solid var(--peach-light);cursor:pointer;transition:all .2s;width:100%;max-width:400px}
+  .game-card-preview:hover{transform:translateX(4px);box-shadow:var(--shadow-card)}
+  .gcp-icon{font-size:34px}
+  .gcp-info h3{font-size:14px;font-weight:700;margin-bottom:2px}
+  .gcp-info p{font-size:11px;color:var(--text-mid)}
+  .gcp-badge{margin-left:auto;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+  .btn-green{width:100%;max-width:400px;padding:17px;background:linear-gradient(135deg,var(--mint),var(--mint-dark));color:white;border:none;border-radius:var(--r-md);font-size:17px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(110,207,181,.4),0 3px 0 var(--mint-dark)}
+  .btn-green:hover{transform:translateY(-2px)}
+  .btn-ghost{width:100%;max-width:400px;padding:13px;background:white;color:var(--text-mid);border:2px solid var(--peach);border-radius:var(--r-md);font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s}
+  .btn-ghost:hover{border-color:var(--coral);color:var(--coral)}
+
+  /* ── GAME HEADER ── */
+  #screen-game{padding:0;position:relative}
+  .game-header{background:white;padding:12px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,.06);position:sticky;top:0;z-index:100}
+  .stage-lbl{font-size:11px;font-weight:700;color:white;padding:4px 10px;border-radius:20px;white-space:nowrap}
+  .prog-bar{flex:1;height:8px;background:var(--peach-light);border-radius:4px;overflow:hidden}
+  .prog-fill{height:100%;background:linear-gradient(90deg,var(--coral),var(--peach));border-radius:4px;transition:width .3s ease}
+  .score-disp{font-weight:900;font-size:15px;color:var(--coral);white-space:nowrap}
+  .combo-disp{font-size:11px;font-weight:700;color:var(--lavender-dark);white-space:nowrap}
+  .game-area{flex:1;padding:18px;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:500px;margin:0 auto;width:100%}
+  .q-label{background:white;border-radius:var(--r-md);padding:12px 16px;width:100%;text-align:center;box-shadow:var(--shadow-soft);border:2px solid var(--peach-light)}
+  .q-label h2{font-size:14px;font-weight:900;margin-bottom:2px}
+  .q-label p{font-size:11px;color:var(--text-mid)}
+  .q-dots{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;width:100%}
+  .q-dot{width:10px;height:10px;border-radius:50%;background:var(--peach-light);transition:all .3s}
+  .q-dot.done{background:var(--mint)}
+  .q-dot.curr{background:var(--coral);transform:scale(1.3)}
+
+  /* ── SHELF GAME ── */
+  .shelves{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%}
+  .shelf{background:white;border-radius:var(--r-md);padding:10px;min-height:76px;border:2.5px dashed var(--peach);transition:all .2s;text-align:center;cursor:pointer}
+  .shelf.highlight{border-style:solid;transform:scale(1.03)}
+  .shelf.correct-drop{animation:correctPulse .4s ease}
+  .shelf.wrong-drop{animation:shake .3s ease}
+  .shelf-lbl{font-size:11px;font-weight:700;color:var(--text-mid);margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:3px}
+  .shelf-items{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;min-height:22px}
+  .shelf-tag{background:var(--peach-light);border-radius:6px;padding:2px 6px;font-size:10px;font-weight:500;animation:pop .2s ease}
+  .drag-card{background:white;border-radius:var(--r-md);padding:14px 20px;text-align:center;box-shadow:var(--shadow-float);border:2.5px solid var(--peach);cursor:grab;user-select:none;transition:all .15s;touch-action:none;min-width:150px}
+  .drag-card:active{cursor:grabbing;transform:scale(1.06) rotate(2deg)}
+  .drag-card.dragging{opacity:.85;transform:scale(1.08) rotate(3deg);position:fixed;z-index:1000;pointer-events:none}
+  .card-emoji{font-size:34px;display:block;margin-bottom:4px}
+  .card-name{font-size:16px;font-weight:700}
+  .card-hint{font-size:11px;color:var(--text-light);margin-top:2px}
+
+  /* ── PAIR GAME ── */
+  .pair-box{background:white;border-radius:var(--r-lg);padding:18px;text-align:center;width:100%;box-shadow:var(--shadow-card);border:2.5px solid var(--sky)}
+  .pair-box-lbl{font-size:11px;font-weight:700;color:var(--sky-dark);margin-bottom:8px}
+  .relation-opts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;width:100%}
+  .rel-btn{padding:10px 18px;border-radius:20px;border:2px solid var(--peach);background:white;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s;color:var(--text-dark)}
+  .rel-btn:hover{background:var(--peach-light);border-color:var(--coral)}
+  .rel-btn:disabled{cursor:default}
+  .rel-btn.correct{background:rgba(110,207,181,.3);border-color:var(--mint-dark);color:var(--mint-dark)}
+  .rel-btn.wrong{background:rgba(255,123,92,.15);border-color:var(--coral);color:var(--coral);animation:shake .3s ease}
+
+  /* ── SWIPE GAME ── */
+  .swipe-container{position:relative;width:100%;height:210px}
+  .swipe-card{position:absolute;top:0;left:50%;transform:translateX(-50%);background:white;border-radius:var(--r-lg);padding:22px 18px;width:90%;max-width:340px;box-shadow:var(--shadow-float);border:2.5px solid var(--lavender);text-align:center;cursor:grab;touch-action:none;user-select:none}
+  .swipe-card.swiping{transition:none}
+  .swipe-card.swipe-left{animation:swipeOutLeft .3s ease forwards}
+  .swipe-card.swipe-right{animation:swipeOutRight .3s ease forwards}
+  .swipe-ind{position:absolute;top:50%;transform:translateY(-50%);font-size:36px;font-weight:900;pointer-events:none;opacity:0;transition:opacity .1s;z-index:10}
+  .swipe-ind.left{left:8px;color:var(--sky-dark)}
+  .swipe-ind.right{right:8px;color:var(--coral)}
+  .swipe-emoji{font-size:42px;display:block;margin-bottom:8px}
+  .swipe-name{font-size:20px;font-weight:900;margin-bottom:4px}
+  .swipe-desc{font-size:11px;color:var(--text-mid)}
+  .swipe-dir{display:flex;justify-content:space-between;width:100%;padding:0 8px}
+  .swipe-dir-item{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .swipe-dir-item span{font-size:18px}
+  .swipe-dir-item p{font-size:11px;font-weight:700;text-align:center}
+  .swipe-btns{display:flex;gap:12px;justify-content:center;width:100%}
+  .swipe-btn{flex:1;max-width:140px;padding:13px;border:none;border-radius:var(--r-md);font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s}
+  .swipe-btn.left-btn{background:linear-gradient(135deg,var(--sky),var(--sky-dark));color:white;box-shadow:0 4px 14px rgba(124,196,240,.4)}
+  .swipe-btn.right-btn{background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;box-shadow:0 4px 14px rgba(255,123,92,.4)}
+  .swipe-btn:active{transform:scale(.95)}
+  .swipe-btn:disabled{opacity:.5;cursor:default}
+
+  /* ── FEEDBACK ── */
+  .fb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:499;display:none;backdrop-filter:blur(2px)}
+  .fb-overlay.show{display:block}
+  .fb-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:500;background:white;border-radius:var(--r-lg);padding:22px 28px;text-align:center;box-shadow:var(--shadow-float);min-width:260px;max-width:320px;width:90%;display:none;animation:pop .3s ease}
+  .fb-popup.show{display:block}
+  .fb-popup.correct-fb{border:3px solid var(--mint)}
+  .fb-popup.wrong-fb{border:3px solid var(--coral)}
+  .fb-big{font-size:46px;display:block;margin-bottom:6px}
+  .fb-result{font-size:21px;font-weight:900;margin-bottom:4px}
+  .fb-result.ok{color:var(--mint-dark)}
+  .fb-result.ng{color:var(--coral)}
+  .fb-pts{font-size:15px;font-weight:700;color:var(--lavender-dark);margin-bottom:8px}
+  .fb-exp{font-size:12px;color:var(--text-mid);line-height:1.6;border-top:1px solid var(--peach-light);padding-top:8px;margin-top:4px}
+  .fb-tap{font-size:11px;color:var(--text-light);margin-top:6px}
+
+  /* ── STAGE TRANSITION ── */
+  .stage-trans{position:fixed;inset:0;background:white;z-index:600;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:36px}
+  .stage-trans.show{display:flex;animation:pop .4s ease}
+  .stage-trans-emoji{font-size:68px;animation:bounce 1s ease infinite}
+  .stage-trans-title{font-family:'Gaegu',cursive;font-size:30px;color:var(--coral)}
+  .stage-trans-btn{margin-top:12px;padding:15px 38px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;border:none;border-radius:var(--r-md);font-size:17px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(255,123,92,.4)}
+
+  /* ── RESULT ── */
+  #screen-result{padding:22px;align-items:center;gap:14px}
+  .res-emoji{font-size:60px;display:block;animation:bounce 1s ease infinite;text-align:center}
+  .res-title{font-family:'Gaegu',cursive;font-size:32px;color:var(--coral);text-align:center}
+  .res-score-card{background:white;border-radius:var(--r-lg);padding:22px;width:100%;max-width:400px;box-shadow:var(--shadow-card);border:3px solid var(--peach);text-align:center}
+  .res-score-big{font-family:'Gaegu',cursive;font-size:62px;color:var(--coral);line-height:1}
+  .res-score-lbl{font-size:12px;color:var(--text-mid);margin-bottom:14px}
+  .res-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;border-top:1px solid var(--peach-light);padding-top:10px}
+  .res-stat-val{font-size:20px;font-weight:900}
+  .res-stat-lbl{font-size:10px;color:var(--text-light)}
+  .rank-board{background:white;border-radius:var(--r-lg);padding:18px;width:100%;max-width:400px;box-shadow:var(--shadow-card);border:2px solid var(--peach-light)}
+  .rank-board-title{font-size:15px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+  .rank-item{display:flex;align-items:center;gap:10px;padding:9px 6px;border-radius:var(--r-sm);margin-bottom:3px}
+  .rank-item.r1{background:rgba(255,229,102,.3)}
+  .rank-item.r2{background:rgba(200,200,200,.2)}
+  .rank-item.r3{background:rgba(255,185,151,.2)}
+  .rank-item.me{border:2px solid var(--coral)}
+  .rank-num{font-size:18px;width:28px;text-align:center}
+  .rank-name{flex:1;font-weight:700;font-size:13px}
+  .rank-score{font-weight:900;font-size:15px;color:var(--coral)}
+  .rank-me-badge{font-size:10px;background:var(--coral);color:white;padding:2px 6px;border-radius:10px}
+  .res-btns{display:flex;flex-direction:column;gap:9px;width:100%;max-width:400px}
+  .btn-coral{padding:15px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;border:none;border-radius:var(--r-md);font-size:16px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 5px 14px rgba(255,123,92,.35);transition:all .2s}
+  .btn-coral:hover{transform:translateY(-2px)}
+
+  /* ── MISC ── */
+  .confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;pointer-events:none;z-index:999;animation:confetti-fall 2.5s ease-in forwards}
+  .toast{position:fixed;top:78px;left:50%;transform:translateX(-50%);background:var(--text-dark);color:white;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:500;z-index:800;opacity:0;transition:opacity .3s;white-space:nowrap}
+  .toast.show{opacity:1}
+  .loading-overlay{position:fixed;inset:0;background:var(--cream);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+  .loading-spinner{width:46px;height:46px;border:4px solid var(--peach-light);border-top-color:var(--coral);border-radius:50%;animation:spin .8s linear infinite}
+  .high-score-badge{display:inline-block;background:linear-gradient(135deg,var(--lemon),#F0D040);color:var(--text-dark);font-size:12px;font-weight:900;padding:4px 12px;border-radius:20px;margin-top:6px;animation:pop .4s ease}
+  .setup-notice{background:rgba(255,185,151,.2);border:1.5px solid var(--peach);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--text-mid);width:100%;max-width:400px;text-align:center;line-height:1.6}
+  .setup-notice a{color:var(--coral);font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- ══════════ INTRO ══════════ -->
+<div id="screen-intro" class="screen active">
+  <span class="intro-deco">🛍️</span>
+  <h1 class="game-title">경제 마켓</h1>
+  <p class="game-subtitle">재화와 용역 분류 게임</p>
+
+  <div class="intro-card">
+    <h3>📝 닉네임을 입력하세요</h3>
+    <input type="text" class="nickname-input" id="nicknameInput" placeholder="예: 경제왕김민준" maxlength="10">
+    <p class="input-msg" id="inputMsg" style="color:var(--text-light)">최대 10자 · 한글/영문/숫자 가능</p>
+  </div>
+
+  <button class="btn-start" id="btnStart" disabled onclick="startGame()">🎮 게임 시작하기</button>
+
+  <div class="ranking-preview" id="rankingPreview">
+    <h4>🏆 현재 랭킹</h4>
+    <div id="miniRankList"><p style="font-size:12px;color:var(--text-light);text-align:center">불러오는 중…</p></div>
+  </div>
+
+  <div class="setup-notice" id="setupNotice" style="display:none">
+    ⚙️ 구글 시트 연동 전입니다. <a href="#" onclick="showSetupGuide()">배포 설정 방법 보기</a>
+  </div>
+</div>
+
+<!-- ══════════ TUTORIAL ══════════ -->
+<div id="screen-tutorial" class="screen">
+  <div style="text-align:center;padding-top:24px">
+    <div class="tut-title">🎯 게임 안내</div>
+    <p style="font-size:13px;color:var(--text-mid);margin-top:4px">닉네임: <strong id="tutNickname"></strong></p>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;padding:0 20px;width:100%;max-width:448px;margin:0 auto">
+    <div class="game-card-preview" style="border-color:#FFD9C7" onclick="startMiniGame(0)">
+      <span class="gcp-icon">🏷️</span>
+      <div class="gcp-info"><h3>선반 정리</h3><p>희소성 유무 · 사용 목적으로 분류</p></div>
+      <span class="gcp-badge" style="background:rgba(255,185,151,.3);color:#E85D3F">4분류</span>
+    </div>
+    <div class="game-card-preview" style="border-color:#B8E8F8" onclick="startMiniGame(1)">
+      <span class="gcp-icon">🤝</span>
+      <div class="gcp-info"><h3>짝꿍 찾기</h3><p>대체재·보완재·독립재·결합재 파악</p></div>
+      <span class="gcp-badge" style="background:rgba(124,196,240,.3);color:#5AA8D8">관계분류</span>
+    </div>
+    <div class="game-card-preview" style="border-color:#E0D0FF" onclick="startMiniGame(2)">
+      <span class="gcp-icon">⚡</span>
+      <div class="gcp-info"><h3>용역 레이더</h3><p>재화 vs 용역 · 직접/간접 구분</p></div>
+      <span class="gcp-badge" style="background:rgba(196,168,255,.3);color:#A080E8">좌우판정</span>
+    </div>
+  </div>
+  <div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:9px;width:100%;max-width:448px;margin:0 auto">
+    <button class="btn-green" onclick="startAllGames()">✨ 전체 게임 시작 (3스테이지)</button>
+    <button class="btn-ghost" onclick="showScreen('screen-intro')">← 처음으로</button>
+  </div>
+</div>
+
+<!-- ══════════ GAME ══════════ -->
+<div id="screen-game" class="screen">
+  <div class="game-header">
+    <span class="stage-lbl" id="stageLbl" style="background:var(--coral)">Stage 1</span>
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <span class="score-disp" id="scoreDisp">0점</span>
+    <span class="combo-disp" id="comboDisp"></span>
+  </div>
+  <div class="game-area" id="gameArea"></div>
+</div>
+
+<!-- ══════════ RESULT ══════════ -->
+<div id="screen-result" class="screen">
+  <span class="res-emoji" id="resEmoji">🎉</span>
+  <div class="res-title">게임 완료!</div>
+  <p style="font-size:14px;color:var(--text-mid);text-align:center" id="resNickname"></p>
+  <div class="res-score-card">
+    <div class="res-score-big" id="resScore">0</div>
+    <div class="res-score-lbl">최종 점수</div>
+    <div id="highScoreBadge"></div>
+    <div class="res-stats">
+      <div><div class="res-stat-val" id="resCorrect">0</div><div class="res-stat-lbl">정답 수</div></div>
+      <div><div class="res-stat-val" id="resAcc">0%</div><div class="res-stat-lbl">정확도</div></div>
+      <div><div class="res-stat-val" id="resCombo">0</div><div class="res-stat-lbl">최고 콤보</div></div>
+    </div>
+  </div>
+  <div class="rank-board">
+    <div class="rank-board-title">🏆 전체 랭킹</div>
+    <div id="fullRankList"></div>
+  </div>
+  <div class="res-btns">
+    <button class="btn-coral" onclick="retryGame()">🔄 다시 도전하기</button>
+    <button class="btn-ghost" onclick="goHome()">🏠 처음으로</button>
+  </div>
+</div>
+
+<!-- FEEDBACK -->
+<div class="fb-overlay" id="fbOverlay"></div>
+<div class="fb-popup" id="fbPopup">
+  <span class="fb-big" id="fbBig">✅</span>
+  <div class="fb-result" id="fbResult">정답!</div>
+  <div class="fb-pts" id="fbPts">+100점</div>
+  <div class="fb-exp" id="fbExp"></div>
+  <div class="fb-tap">탭하면 넘어갑니다</div>
+</div>
+
+<!-- STAGE TRANSITION -->
+<div class="stage-trans" id="stageTrans">
+  <span class="stage-trans-emoji" id="stEmoji">🎉</span>
+  <div class="stage-trans-title" id="stTitle">스테이지 완료!</div>
+  <div style="font-size:14px;color:var(--text-mid)" id="stNext"></div>
+  <div style="font-size:20px;font-weight:900;color:var(--coral)" id="stPts"></div>
+  <button class="stage-trans-btn" id="stBtn">다음 →</button>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay" style="display:none">
+  <div class="loading-spinner"></div>
+  <div style="font-size:13px;color:var(--text-mid)" id="loadingText">불러오는 중…</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════
+// ⚙️  구글 앱스크립트 URL 설정
+//    배포 후 여기에 URL을 붙여넣으세요
+// ════════════════════════════════════════
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxv7bD88H99JmFgb-jQKTx7vRFzQIB-EYPbtaQreHpHCh1qg187JK0hdqmMJwbMc-g/exec';
+const IS_CONFIGURED = SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE';
+
+// ════════════════════════════════════════
+//  FULL QUESTION DATABASE
+// ════════════════════════════════════════
+const DB = {
+  shelf: [
+    // 경제재
+    {emoji:"👗",name:"옷",shelf:"economic",hint:"대가를 지불해야 함",exp:"옷은 희소성이 있어 대가를 지불해야 얻을 수 있는 경제재예요."},
+    {emoji:"💻",name:"노트북",shelf:"economic",hint:"비용을 내야 함",exp:"노트북은 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"📱",name:"스마트폰",shelf:"economic",hint:"비싸게 팔림",exp:"스마트폰은 희소성이 있어 구매 비용이 드는 경제재예요."},
+    {emoji:"🚗",name:"자동차(생산용)",shelf:"economic",hint:"공장이 구매함",exp:"공장에서 사용하는 자동차도 희소성이 있는 경제재예요."},
+    {emoji:"🏠",name:"아파트",shelf:"economic",hint:"돈을 내야 함",exp:"아파트는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"💊",name:"약",shelf:"economic",hint:"약국에서 구매",exp:"약은 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"📚",name:"교과서",shelf:"economic",hint:"학교에서 구매",exp:"교과서는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    // 자유재
+    {emoji:"☀️",name:"햇빛",shelf:"free",hint:"무료로 얻을 수 있음",exp:"햇빛은 아무런 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"💨",name:"바람",shelf:"free",hint:"자연에서 무료로",exp:"바람은 아무 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"🌊",name:"바닷물",shelf:"free",hint:"무한히 있음",exp:"바닷물은 풍부해 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"🌧️",name:"빗물",shelf:"free",hint:"하늘에서 내림",exp:"빗물은 자연에서 무상으로 주어지는 자유재예요."},
+    {emoji:"🌬️",name:"공기",shelf:"free",hint:"숨쉬기 무료",exp:"공기는 아무런 대가 없이 얻을 수 있는 자유재예요."},
+    // 생산재
+    {emoji:"🌾",name:"밀가루",shelf:"production",hint:"빵 만들 때 재료",exp:"밀가루는 빵이나 과자 생산에 쓰이는 생산재예요."},
+    {emoji:"🔩",name:"철강",shelf:"production",hint:"공장에서 원재료",exp:"철강은 자동차나 건물 생산에 쓰이는 생산재예요."},
+    {emoji:"🧵",name:"실",shelf:"production",hint:"옷 만들 때 씀",exp:"실은 옷 제조에 쓰이는 생산재(원재료)예요."},
+    {emoji:"🪵",name:"목재",shelf:"production",hint:"가구 만들 때 씀",exp:"목재는 가구 제조에 쓰이는 생산재(원재료)예요."},
+    {emoji:"⚙️",name:"공작기계",shelf:"production",hint:"물건 만드는 기계",exp:"공작기계는 생산 과정에 사용되는 생산재(자본재)예요."},
+    {emoji:"🚜",name:"트랙터",shelf:"production",hint:"농사에 사용",exp:"트랙터는 농업 생산에 쓰이는 생산재(자본재)예요."},
+    {emoji:"🛢️",name:"원유",shelf:"production",hint:"석유 정제 원료",exp:"원유는 석유 제품 생산에 쓰이는 생산재(원재료)예요."},
+    // 소비재
+    {emoji:"🍕",name:"피자",shelf:"consumption",hint:"먹기 위한 것",exp:"피자는 개인의 욕망 충족을 위해 소비되는 소비재예요."},
+    {emoji:"🍎",name:"사과",shelf:"consumption",hint:"직접 먹는 것",exp:"사과는 직접 먹기 위한 소비재예요."},
+    {emoji:"🎮",name:"게임기",shelf:"consumption",hint:"놀이를 위한 것",exp:"게임기는 개인 여가를 위한 소비재예요."},
+    {emoji:"👟",name:"운동화",shelf:"consumption",hint:"개인이 신는 것",exp:"운동화는 개인이 착용하기 위한 소비재예요."},
+    {emoji:"🧴",name:"샴푸",shelf:"consumption",hint:"머리 감을 때",exp:"샴푸는 개인 생활에 소비되는 소비재예요."},
+    {emoji:"🍫",name:"초콜릿",shelf:"consumption",hint:"먹기 위한 것",exp:"초콜릿은 개인 소비를 위한 소비재예요."},
+    {emoji:"🚗",name:"승용차",shelf:"consumption",hint:"개인이 타는 것",exp:"개인 이동용 승용차는 소비재예요."},
+  ],
+
+  pair: [
+    {a:{emoji:"🥤",name:"콜라"},b:{emoji:"🍋",name:"사이다"},rel:"대체재",exp:"콜라와 사이다는 같은 효용을 얻을 수 있어 서로 대신 쓸 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"⌨️",name:"키보드"},b:{emoji:"🖱️",name:"마우스"},rel:"보완재",exp:"키보드와 마우스는 함께 사용할 때 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🍜",name:"라면"},b:{emoji:"🧴",name:"샴푸"},rel:"독립재",exp:"라면과 샴푸는 서로 아무런 관련이 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"✏️",name:"연필"},b:{emoji:"🖊️",name:"볼펜"},rel:"대체재",exp:"연필과 볼펜은 같은 용도로 서로 대신 사용할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🎿",name:"스키"},b:{emoji:"👖",name:"스키복"},rel:"보완재",exp:"스키와 스키복은 함께 사용해야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"☕",name:"커피"},b:{emoji:"🍵",name:"녹차"},rel:"대체재",exp:"커피와 녹차는 따뜻한 음료로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🖨️",name:"프린터"},b:{emoji:"📄",name:"프린터 잉크"},rel:"결합재",exp:"프린터와 잉크는 함께 쓰지 않으면 의미 없는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🚌",name:"버스"},b:{emoji:"🚇",name:"지하철"},rel:"대체재",exp:"버스와 지하철은 이동 수단으로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"📖",name:"책"},b:{emoji:"☂️",name:"우산"},rel:"독립재",exp:"책과 우산은 서로 전혀 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🍞",name:"빵"},b:{emoji:"🧈",name:"버터"},rel:"보완재",exp:"빵과 버터는 함께 먹을 때 더 큰 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🖥️",name:"모니터"},b:{emoji:"💻",name:"컴퓨터 본체"},rel:"결합재",exp:"모니터와 컴퓨터 본체는 함께 써야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🍚",name:"쌀"},b:{emoji:"🍝",name:"파스타"},rel:"대체재",exp:"쌀과 파스타는 주식으로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🎸",name:"기타"},b:{emoji:"🎵",name:"기타 줄"},rel:"결합재",exp:"기타와 기타 줄은 함께 사용해야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🍦",name:"아이스크림"},b:{emoji:"🌂",name:"우산"},rel:"독립재",exp:"아이스크림과 우산은 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🏃",name:"운동화"},b:{emoji:"🧦",name:"양말"},rel:"보완재",exp:"운동화와 양말은 함께 착용해야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"📷",name:"카메라"},b:{emoji:"🔋",name:"배터리"},rel:"결합재",exp:"카메라와 배터리는 함께 써야 작동하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🚲",name:"자전거"},b:{emoji:"🛵",name:"오토바이"},rel:"대체재",exp:"자전거와 오토바이는 이동 수단으로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🍕",name:"피자"},b:{emoji:"🧃",name:"음료수"},rel:"보완재",exp:"피자와 음료수는 함께 먹을 때 더 큰 만족을 주는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🏠",name:"집"},b:{emoji:"🌵",name:"선인장"},rel:"독립재",exp:"집과 선인장은 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"📱",name:"스마트폰"},b:{emoji:"🔌",name:"충전기"},rel:"결합재",exp:"스마트폰과 충전기는 함께 사용해야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+  ],
+
+  swipe: [
+    {emoji:"👨‍🏫",name:"교사의 수업",isService:true,serviceType:"직접 용역",exp:"교사의 수업은 형태 없이 직접 제공하는 직접 용역이에요."},
+    {emoji:"👟",name:"운동화",isService:false,exp:"운동화는 형태가 있는 재화예요."},
+    {emoji:"🏥",name:"의사의 진료",isService:true,serviceType:"직접 용역",exp:"의사의 진료는 매개체 없이 직접 제공되는 직접 용역이에요."},
+    {emoji:"🎵",name:"음반(CD)",isService:false,exp:"CD는 형태가 있는 재화예요. (스트리밍은 용역)"},
+    {emoji:"🚚",name:"택배 배송",isService:true,serviceType:"간접 용역",exp:"택배 배송은 트럭(매개체)을 통해 전달하는 간접 용역이에요."},
+    {emoji:"📺",name:"TV",isService:false,exp:"TV는 형태가 있는 소비재 재화예요."},
+    {emoji:"💇",name:"미용사 서비스",isService:true,serviceType:"직접 용역",exp:"미용사의 헤어 서비스는 직접 제공되는 직접 용역이에요."},
+    {emoji:"✈️",name:"비행기 탑승",isService:true,serviceType:"간접 용역",exp:"비행기(매개체)를 통해 이동 서비스를 제공하는 간접 용역이에요."},
+    {emoji:"🍔",name:"햄버거",isService:false,exp:"햄버거는 형태가 있는 음식 재화예요."},
+    {emoji:"🌐",name:"인터넷 서비스",isService:true,serviceType:"간접 용역",exp:"인터넷은 통신 인프라(매개체)를 통한 간접 용역이에요."},
+    {emoji:"🎓",name:"학원 강의",isService:true,serviceType:"직접 용역",exp:"강사가 직접 지식을 전달하는 직접 용역이에요."},
+    {emoji:"👜",name:"가방",isService:false,exp:"가방은 형태가 있는 경제재(재화)예요."},
+    {emoji:"🚕",name:"택시 탑승",isService:true,serviceType:"간접 용역",exp:"택시(매개체)를 통해 이동 서비스를 제공하는 간접 용역이에요."},
+    {emoji:"💐",name:"꽃다발",isService:false,exp:"꽃다발은 형태가 있는 재화예요."},
+    {emoji:"👨‍⚕️",name:"간호사 케어",isService:true,serviceType:"직접 용역",exp:"간호사의 환자 케어는 직접 제공되는 직접 용역이에요."},
+    {emoji:"🎮",name:"게임기",isService:false,exp:"게임기는 형태가 있는 소비재 재화예요."},
+    {emoji:"🏊",name:"수영 강습",isService:true,serviceType:"직접 용역",exp:"수영 강사의 강습은 직접 제공되는 직접 용역이에요."},
+    {emoji:"🚂",name:"기차 탑승",isService:true,serviceType:"간접 용역",exp:"기차(매개체)를 이용한 이동 서비스는 간접 용역이에요."},
+    {emoji:"🧁",name:"케이크",isService:false,exp:"케이크는 형태가 있는 소비재 재화예요."},
+    {emoji:"📡",name:"위성방송 서비스",isService:true,serviceType:"간접 용역",exp:"위성(매개체)을 통해 제공되는 방송 서비스는 간접 용역이에요."},
+    {emoji:"🛁",name:"욕조",isService:false,exp:"욕조는 형태가 있는 내구 소비재예요."},
+    {emoji:"🧑‍🍳",name:"요리사 서비스",isService:true,serviceType:"직접 용역",exp:"요리사가 직접 음식을 만들어 주는 것은 직접 용역이에요."},
+    {emoji:"📦",name:"택배 박스",isService:false,exp:"택배 박스 자체는 형태가 있는 재화예요."},
+    {emoji:"🚁",name:"헬기 응급이송",isService:true,serviceType:"간접 용역",exp:"헬기(매개체)를 통한 응급이송 서비스는 간접 용역이에요."},
+  ]
+};
+
+// 문제 수 설정 (각 게임당 출제 수)
+const Q_COUNT = { shelf: 10, pair: 10, swipe: 10 };
+
+// ════════════════════════════════════════
+//  유틸리티
+// ════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickRandom(arr, n) {
+  return shuffle(arr).slice(0, Math.min(n, arr.length));
+}
+
+// ════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════
+let state = {
+  nickname: '', isReturning: false,
+  stageOrder: [0,1,2], currentStage: 0,
+  score: 0, combo: 0, maxCombo: 0,
+  correctCount: 0, totalCount: 0,
+  stageScores: [0,0,0],
+  // 셔플된 문제 세트 (게임 시작 시 결정)
+  questions: { shelf: [], pair: [], swipe: [] },
+  qIdx: { shelf: 0, pair: 0, swipe: 0 },
+};
+
+function buildQuestionSets() {
+  state.questions.shelf = pickRandom(DB.shelf, Q_COUNT.shelf);
+  state.questions.pair  = pickRandom(DB.pair,  Q_COUNT.pair);
+  state.questions.swipe = pickRandom(DB.swipe, Q_COUNT.swipe);
+  state.qIdx = { shelf: 0, pair: 0, swipe: 0 };
+}
+
+// ════════════════════════════════════════
+//  API (구글 앱스크립트 연동)
+// ════════════════════════════════════════
+async function apiGet(params) {
+  if (!IS_CONFIGURED) return null;
+  try {
+    const qs = new URLSearchParams(params).toString();
+    const res = await fetch(`${SCRIPT_URL}?${qs}`);
+    return await res.json();
+  } catch(e) { return null; }
+}
+
+async function apiPost(body) {
+  if (!IS_CONFIGURED) return null;
+  try {
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(body)
+    });
+    return await res.json();
+  } catch(e) { return null; }
+}
+
+// ════════════════════════════════════════
+//  UI 헬퍼
+// ════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg, ms = 2000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), ms);
+}
+
+function showLoading(msg = '불러오는 중…') {
+  document.getElementById('loadingText').textContent = msg;
+  document.getElementById('loadingOverlay').style.display = 'flex';
+}
+function hideLoading() { document.getElementById('loadingOverlay').style.display = 'none'; }
+
+function spawnConfetti() {
+  const colors = ['#FFB997','#6ECFB5','#FFE566','#C4A8FF','#7CC4F0','#FF7B5C'];
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.cssText = `left:${Math.random()*100}%;top:-10px;background:${colors[~~(Math.random()*colors.length)]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;animation-delay:${Math.random()}s;animation-duration:${2+Math.random()*1.5}s;border-radius:${Math.random()>.5?'50%':'2px'}`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3500);
+  }
+}
+
+function updateHeader() {
+  const names  = ['선반 정리','짝꿍 찾기','용역 레이더'];
+  const colors = ['var(--coral)','var(--sky-dark)','var(--lavender-dark)'];
+  const g = state.stageOrder[state.currentStage];
+  const lbl = document.getElementById('stageLbl');
+  lbl.textContent = `Stage ${state.currentStage+1}: ${names[g]}`;
+  lbl.style.background = colors[g];
+  document.getElementById('scoreDisp').textContent = `${state.score}점`;
+  const cd = document.getElementById('comboDisp');
+  cd.textContent = state.combo >= 2 ? `🔥 ${state.combo}콤보` : '';
+}
+
+function updateProgress(cur, total) {
+  document.getElementById('progFill').style.width = `${(cur/total)*100}%`;
+}
+
+function makeDots(total, cur, doneColor = 'var(--mint)') {
+  return Array.from({length: total}, (_,i) => {
+    if (i < cur)  return `<div class="q-dot done" style="background:${doneColor}"></div>`;
+    if (i === cur) return `<div class="q-dot curr"></div>`;
+    return `<div class="q-dot"></div>`;
+  }).join('');
+}
+
+function addScore(base) {
+  state.combo++;
+  if (state.combo > state.maxCombo) state.maxCombo = state.combo;
+  const mult = state.combo >= 3 ? 1.5 : 1;
+  const pts  = Math.round(base * mult);
+  state.score += pts;
+  state.correctCount++;
+  state.stageScores[state.currentStage] += pts;
+  updateHeader();
+  return pts;
+}
+
+// ════════════════════════════════════════
+//  FEEDBACK POPUP
+// ════════════════════════════════════════
+function showFeedback(correct, points, exp) {
+  const popup   = document.getElementById('fbPopup');
+  const overlay = document.getElementById('fbOverlay');
+  document.getElementById('fbBig').textContent    = correct ? '✅' : '❌';
+  document.getElementById('fbResult').textContent = correct ? '정답!' : '아쉽!';
+  document.getElementById('fbResult').className   = 'fb-result ' + (correct ? 'ok' : 'ng');
+  document.getElementById('fbPts').textContent    = correct ? `+${points}점${state.combo>=3?' (콤보 ×1.5!)':''}` : '해설을 확인하세요';
+  document.getElementById('fbExp').textContent    = exp;
+  popup.className   = 'fb-popup show ' + (correct ? 'correct-fb' : 'wrong-fb');
+  overlay.classList.add('show');
+
+  let done = false;
+  const dismiss = () => {
+    if (done) return; done = true;
+    clearTimeout(timer);
+    popup.classList.remove('show');
+    overlay.classList.remove('show');
+    overlay.removeEventListener('click', dismiss);
+    popup.removeEventListener('click', dismiss);
+    setTimeout(() => nextQuestion(), 80);
+  };
+  const timer = setTimeout(dismiss, correct ? 1600 : 3500);
+  setTimeout(() => {
+    overlay.addEventListener('click', dismiss);
+    popup.addEventListener('click', dismiss);
+  }, 350);
+}
+
+// ════════════════════════════════════════
+//  INTRO
+// ════════════════════════════════════════
+const nicknameInput = document.getElementById('nicknameInput');
+const btnStart      = document.getElementById('btnStart');
+
+nicknameInput.addEventListener('input', () => {
+  btnStart.disabled = nicknameInput.value.trim().length < 1;
+  setMsg('최대 10자 · 한글/영문/숫자 가능', 'var(--text-light)');
+});
+
+function setMsg(text, color) {
+  const el = document.getElementById('inputMsg');
+  el.textContent = text; el.style.color = color;
+}
+
+async function loadIntroRanking() {
+  if (!IS_CONFIGURED) {
+    document.getElementById('setupNotice').style.display = 'block';
+    document.getElementById('miniRankList').innerHTML =
+      '<p style="font-size:12px;color:var(--text-light);text-align:center">앱스크립트 연동 후 랭킹이 표시됩니다</p>';
+    return;
+  }
+  const data = await apiGet({ action: 'getRankings' });
+  renderMiniRanking(data ? data.rankings : []);
+}
+
+function renderMiniRanking(rankings) {
+  const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+  const list = document.getElementById('miniRankList');
+  if (!rankings || !rankings.length) {
+    list.innerHTML = '<p style="font-size:12px;color:var(--text-light);text-align:center">아직 플레이한 사람이 없어요!</p>';
+    return;
+  }
+  list.innerHTML = rankings.slice(0,5).map((r,i) => `
+    <div class="mini-rank-item">
+      <span class="mini-rank-num">${medals[i]||`${i+1}`}</span>
+      <span class="mini-rank-name">${r.name}</span>
+      <span class="mini-rank-score">${Number(r.score).toLocaleString()}점</span>
+    </div>`).join('');
+}
+
+async function startGame() {
+  const name = nicknameInput.value.trim();
+  if (!name) return;
+  btnStart.disabled = true;
+
+  if (IS_CONFIGURED) {
+    showLoading('닉네임 확인 중…');
+    const res = await apiGet({ action: 'checkNickname', nickname: name });
+    hideLoading();
+    if (res && res.exists) {
+      const prev = res.prevScore;
+      setMsg(prev != null
+        ? `👋 돌아왔군요! 이전 최고 기록: ${Number(prev).toLocaleString()}점`
+        : `👋 돌아왔군요! 이번엔 더 높은 점수 도전!`, 'var(--mint-dark)');
+      await new Promise(r => setTimeout(r, 1800));
+    } else {
+      await apiPost({ action: 'registerName', nickname: name });
+    }
+  }
+
+  state.nickname = name;
+  document.getElementById('tutNickname').textContent = name;
+  setMsg('최대 10자 · 한글/영문/숫자 가능', 'var(--text-light)');
+  btnStart.disabled = false;
+  showScreen('screen-tutorial');
+}
+
+// ════════════════════════════════════════
+//  GAME FLOW
+// ════════════════════════════════════════
+function resetState() {
+  state.score = 0; state.combo = 0; state.maxCombo = 0;
+  state.correctCount = 0; state.totalCount = 0;
+  state.stageScores = [0,0,0]; state.currentStage = 0;
+  buildQuestionSets(); // 매판 새 랜덤 문제 세트
+}
+
+function startAllGames() {
+  state.stageOrder = [0,1,2];
+  resetState();
+  showScreen('screen-game');
+  loadMiniGame(state.stageOrder[0]);
+}
+
+function startMiniGame(idx) {
+  state.stageOrder = [idx];
+  resetState();
+  showScreen('screen-game');
+  loadMiniGame(idx);
+}
+
+function loadMiniGame(gameIdx) {
+  updateHeader();
+  document.getElementById('gameArea').innerHTML = '';
+  if (gameIdx === 0) renderShelfGame();
+  else if (gameIdx === 1) renderPairGame();
+  else renderSwipeGame();
+}
+
+function nextQuestion() {
+  const g = state.stageOrder[state.currentStage];
+  const keys = ['shelf','pair','swipe'];
+  const key = keys[g];
+  state.qIdx[key]++;
+  if (state.qIdx[key] >= state.questions[key].length) finishStage();
+  else loadMiniGame(g);
+}
+
+function finishStage() {
+  const g = state.stageOrder[state.currentStage];
+  const names = ['선반 정리','짝꿍 찾기','용역 레이더'];
+  const emojis = ['🏷️','🤝','⚡'];
+  document.getElementById('stEmoji').textContent = emojis[g];
+  document.getElementById('stTitle').textContent = `${names[g]} 완료!`;
+  document.getElementById('stPts').textContent   = `+${state.stageScores[state.currentStage].toLocaleString()}점 획득!`;
+
+  const isLast = state.currentStage >= state.stageOrder.length - 1;
+  const btn = document.getElementById('stBtn');
+  if (isLast) {
+    document.getElementById('stNext').textContent = '모든 스테이지를 완료했어요! 🎊';
+    btn.textContent = '🏆 결과 보기';
+    btn.onclick = () => { document.getElementById('stageTrans').classList.remove('show'); finishGame(); };
+  } else {
+    const nextG = state.stageOrder[state.currentStage + 1];
+    document.getElementById('stNext').textContent = `다음: ${names[nextG]} 게임`;
+    btn.textContent = '다음 스테이지 →';
+    btn.onclick = () => {
+      document.getElementById('stageTrans').classList.remove('show');
+      state.currentStage++;
+      loadMiniGame(state.stageOrder[state.currentStage]);
+    };
+  }
+  spawnConfetti();
+  document.getElementById('stageTrans').classList.add('show');
+}
+
+async function finishGame() {
+  showScreen('screen-result');
+  const acc = state.totalCount > 0 ? Math.round(state.correctCount / state.totalCount * 100) : 0;
+  document.getElementById('resEmoji').textContent   = state.score >= 1500 ? '🏆' : state.score >= 800 ? '🎉' : '😊';
+  document.getElementById('resNickname').textContent = `${state.nickname}님의 기록`;
+  document.getElementById('resScore').textContent   = state.score.toLocaleString();
+  document.getElementById('resCorrect').textContent = state.correctCount;
+  document.getElementById('resAcc').textContent     = `${acc}%`;
+  document.getElementById('resCombo').textContent   = state.maxCombo;
+  spawnConfetti();
+
+  if (IS_CONFIGURED) {
+    showLoading('점수 저장 중…');
+    const res = await apiPost({
+      action: 'saveScore', nickname: state.nickname,
+      score: state.score, correct: state.correctCount,
+      accuracy: acc, maxCombo: state.maxCombo
+    });
+    hideLoading();
+    if (res && res.isHighScore) {
+      document.getElementById('highScoreBadge').innerHTML = '<span class="high-score-badge">🎊 최고 기록 갱신!</span>';
+    }
+    const rankData = await apiGet({ action: 'getRankings' });
+    renderFullRanking(rankData ? rankData.rankings : []);
+  } else {
+    document.getElementById('fullRankList').innerHTML =
+      '<p style="font-size:12px;color:var(--text-light);text-align:center">앱스크립트 연동 후 랭킹이 표시됩니다</p>';
+  }
+}
+
+function renderFullRanking(rankings) {
+  const medals = ['🥇','🥈','🥉'];
+  const list = document.getElementById('fullRankList');
+  if (!rankings || !rankings.length) {
+    list.innerHTML = '<p style="text-align:center;color:var(--text-light);font-size:12px">아직 기록이 없어요</p>';
+    return;
+  }
+  list.innerHTML = rankings.slice(0,10).map((r,i) => {
+    const isMe = r.name === state.nickname;
+    return `<div class="rank-item r${i+1} ${isMe?'me':''}">
+      <span class="rank-num">${medals[i]||`${i+1}`}</span>
+      <span class="rank-name">${r.name}</span>
+      ${isMe ? '<span class="rank-me-badge">나</span>' : ''}
+      <span class="rank-score">${Number(r.score).toLocaleString()}점</span>
+    </div>`;
+  }).join('');
+}
+
+function retryGame() {
+  resetState();
+  showScreen('screen-game');
+  loadMiniGame(state.stageOrder[0]);
+}
+
+function goHome() {
+  nicknameInput.value = '';
+  btnStart.disabled = true;
+  loadIntroRanking();
+  showScreen('screen-intro');
+}
+
+// ════════════════════════════════════════
+//  MINI GAME 1: 선반 정리
+// ════════════════════════════════════════
+const SHELVES_META = [
+  {id:"economic", label:"경제재",  icon:"💰", color:"#FFB997", desc:"희소성 있음"},
+  {id:"free",     label:"자유재",  icon:"🌬️", color:"#7CC4F0", desc:"희소성 없음"},
+  {id:"production",label:"생산재", icon:"🏭", color:"#6ECFB5", desc:"생산에 사용"},
+  {id:"consumption",label:"소비재",icon:"🛒", color:"#C4A8FF", desc:"소비에 사용"}
+];
+
+function renderShelfGame() {
+  const qs = state.questions.shelf;
+  const qi = state.qIdx.shelf;
+  const q  = qs[qi];
+  updateProgress(qi, qs.length);
+  state.totalCount++;
+
+  document.getElementById('gameArea').innerHTML = `
+    <div class="q-dots">${makeDots(qs.length, qi)}</div>
+    <div class="q-label" style="border-color:rgba(255,185,151,.5)">
+      <h2>🏷️ 선반 정리</h2>
+      <p>재화 카드를 올바른 선반으로 드래그하거나 선반을 탭하세요!</p>
+    </div>
+    <div class="drag-card" id="dragCard" draggable="true">
+      <span class="card-emoji">${q.emoji}</span>
+      <span class="card-name">${q.name}</span>
+      <span class="card-hint">${q.hint}</span>
+    </div>
+    <div class="shelves" id="shelvesWrap">
+      ${SHELVES_META.map(s => `
+        <div class="shelf" data-shelf="${s.id}" id="shelf-${s.id}"
+          style="border-color:${s.color}80;background:${s.color}12"
+          onclick="handleShelfDrop('${s.id}',currentQ())">
+          <div class="shelf-lbl" style="color:${s.color}"><span>${s.icon}</span>${s.label}</div>
+          <div style="font-size:9px;color:var(--text-light);margin-bottom:3px">${s.desc}</div>
+          <div class="shelf-items" id="items-${s.id}"></div>
+        </div>`).join('')}
+    </div>`;
+
+  setupShelfDrag();
+  SHELVES_META.forEach(s => {
+    const el = document.getElementById(`shelf-${s.id}`);
+    el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('highlight'); });
+    el.addEventListener('dragleave', () => el.classList.remove('highlight'));
+    el.addEventListener('drop', e => { e.preventDefault(); el.classList.remove('highlight'); handleShelfDrop(s.id, currentQ()); });
+  });
+}
+
+function currentQ() { return state.questions.shelf[state.qIdx.shelf]; }
+
+function setupShelfDrag() {
+  const card = document.getElementById('dragCard');
+  let isDragging = false, startX, startY, origLeft, origTop;
+
+  card.addEventListener('touchstart', e => {
+    const t = e.touches[0];
+    startX = t.clientX; startY = t.clientY;
+    const r = card.getBoundingClientRect();
+    origLeft = r.left; origTop = r.top;
+    isDragging = true;
+    card.classList.add('dragging');
+    card.style.left = origLeft + 'px'; card.style.top = origTop + 'px';
+    card.style.width = r.width + 'px';
+    e.preventDefault();
+  }, {passive: false});
+
+  card.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    const t = e.touches[0];
+    card.style.left = (origLeft + t.clientX - startX) + 'px';
+    card.style.top  = (origTop  + t.clientY - startY) + 'px';
+    e.preventDefault();
+  }, {passive: false});
+
+  card.addEventListener('touchend', e => {
+    if (!isDragging) return;
+    isDragging = false; card.classList.remove('dragging');
+    const t = e.changedTouches[0];
+    card.style.display = 'none';
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    card.style.display = '';
+    const shelf = el ? el.closest('[data-shelf]') : null;
+    if (shelf) handleShelfDrop(shelf.dataset.shelf, currentQ());
+    else { card.style.left=''; card.style.top=''; }
+  });
+}
+
+function handleShelfDrop(shelfId, q) {
+  if (!q) return;
+  document.querySelectorAll('.shelf').forEach(s => s.classList.remove('highlight'));
+  const shelf = document.getElementById(`shelf-${shelfId}`);
+  if (!shelf) return;
+  const correct = shelfId === q.shelf;
+  if (correct) {
+    shelf.classList.add('correct-drop');
+    const pts = addScore(100);
+    const tag = document.createElement('div'); tag.className='shelf-tag'; tag.textContent=q.name;
+    document.getElementById(`items-${shelfId}`).appendChild(tag);
+    setTimeout(() => { showFeedback(true, pts, q.exp); shelf.classList.remove('correct-drop'); }, 180);
+  } else {
+    state.combo = 0; updateHeader();
+    shelf.classList.add('wrong-drop');
+    setTimeout(() => { showFeedback(false, 0, q.exp); shelf.classList.remove('wrong-drop'); }, 180);
+  }
+}
+
+// ════════════════════════════════════════
+//  MINI GAME 2: 짝꿍 찾기
+// ════════════════════════════════════════
+function renderPairGame() {
+  const qs = state.questions.pair;
+  const qi = state.qIdx.pair;
+  const q  = qs[qi];
+  updateProgress(qi, qs.length);
+  state.totalCount++;
+
+  document.getElementById('gameArea').innerHTML = `
+    <div class="q-dots">${makeDots(qs.length, qi, 'var(--sky)')}</div>
+    <div class="q-label" style="border-color:rgba(124,196,240,.5)">
+      <h2>🤝 짝꿍 찾기</h2>
+      <p>두 재화의 관계를 선택하세요!</p>
+    </div>
+    <div class="pair-box">
+      <div class="pair-box-lbl">이 두 재화의 관계는?</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:18px">
+        <div style="text-align:center">
+          <span style="font-size:38px">${q.a.emoji}</span>
+          <div style="font-size:15px;font-weight:700;margin-top:4px">${q.a.name}</div>
+        </div>
+        <div style="font-size:22px;color:var(--text-light)">🔗</div>
+        <div style="text-align:center">
+          <span style="font-size:38px">${q.b.emoji}</span>
+          <div style="font-size:15px;font-weight:700;margin-top:4px">${q.b.name}</div>
+        </div>
+      </div>
+    </div>
+    <div class="relation-opts">
+      ${q.choices.map(c =>
+        `<button class="rel-btn" onclick="handlePairAnswer('${c}')">${c}</button>`
+      ).join('')}
+    </div>`;
+}
+
+function handlePairAnswer(chosen) {
+  const q = state.questions.pair[state.qIdx.pair];
+  const ok = chosen === q.rel;
+  document.querySelectorAll('.rel-btn').forEach(b => {
+    b.disabled = true;
+    if (b.textContent === q.rel) b.classList.add('correct');
+    else if (b.textContent === chosen && !ok) b.classList.add('wrong');
+  });
+  if (ok) { const pts = addScore(120); setTimeout(() => showFeedback(true, pts, q.exp), 280); }
+  else { state.combo = 0; updateHeader(); setTimeout(() => showFeedback(false, 0, q.exp), 280); }
+}
+
+// ════════════════════════════════════════
+//  MINI GAME 3: 용역 레이더
+// ════════════════════════════════════════
+function renderSwipeGame() {
+  const qs = state.questions.swipe;
+  const qi = state.qIdx.swipe;
+  const q  = qs[qi];
+  updateProgress(qi, qs.length);
+  state.totalCount++;
+
+  document.getElementById('gameArea').innerHTML = `
+    <div class="q-dots">${makeDots(qs.length, qi, 'var(--lavender)')}</div>
+    <div class="q-label" style="border-color:rgba(196,168,255,.5)">
+      <h2>⚡ 용역 레이더</h2>
+      <p>← 재화 &nbsp;|&nbsp; 용역 →</p>
+    </div>
+    <div class="swipe-dir">
+      <div class="swipe-dir-item">
+        <span>👈</span><p style="color:var(--sky-dark)">재화<br>(형태 있음)</p>
+      </div>
+      <div class="swipe-dir-item">
+        <span>👉</span><p style="color:var(--coral)">용역<br>(형태 없음)</p>
+      </div>
+    </div>
+    <div class="swipe-container">
+      <div class="swipe-card" id="swipeCard">
+        <span class="swipe-emoji">${q.emoji}</span>
+        <div class="swipe-name">${q.name}</div>
+        <div class="swipe-desc">재화 또는 용역?</div>
+      </div>
+      <div class="swipe-ind left" id="swipeLeft">재화 👈</div>
+      <div class="swipe-ind right" id="swipeRight">👉 용역</div>
+    </div>
+    <div class="swipe-btns">
+      <button class="swipe-btn left-btn" id="btnLeft" onclick="handleSwipe(false)">👈 재화</button>
+      <button class="swipe-btn right-btn" id="btnRight" onclick="handleSwipe(true)">용역 👉</button>
+    </div>
+    <div style="font-size:11px;color:var(--text-light);text-align:center">카드를 스와이프하거나 버튼을 눌러요</div>`;
+
+  setupSwipe();
+}
+
+function setupSwipe() {
+  const card = document.getElementById('swipeCard');
+  let startX = 0, dragging = false;
+
+  const onStart = x => { startX = x; dragging = true; card.classList.add('swiping'); };
+  const onMove  = x => {
+    if (!dragging) return;
+    const dx = x - startX;
+    card.style.transform = `translateX(calc(-50% + ${dx}px)) rotate(${dx*.05}deg)`;
+    document.getElementById('swipeLeft').style.opacity  = dx < -30 ? Math.min(1, Math.abs(dx)/80) : 0;
+    document.getElementById('swipeRight').style.opacity = dx >  30 ? Math.min(1, dx/80) : 0;
+  };
+  const onEnd = x => {
+    if (!dragging) return; dragging = false; card.classList.remove('swiping');
+    const dx = x - startX;
+    if (dx < -60) handleSwipe(false);
+    else if (dx > 60) handleSwipe(true);
+    else {
+      card.style.transform = 'translateX(-50%)';
+      document.getElementById('swipeLeft').style.opacity = 0;
+      document.getElementById('swipeRight').style.opacity = 0;
+    }
+  };
+
+  card.addEventListener('touchstart', e => onStart(e.touches[0].clientX), {passive:true});
+  card.addEventListener('touchmove',  e => onMove(e.touches[0].clientX),  {passive:true});
+  card.addEventListener('touchend',   e => onEnd(e.changedTouches[0].clientX));
+  card.addEventListener('mousedown',  e => onStart(e.clientX));
+  document.addEventListener('mousemove', e => { if(dragging) onMove(e.clientX); });
+  document.addEventListener('mouseup',   e => { if(dragging) onEnd(e.clientX); });
+}
+
+function handleSwipe(isService) {
+  const q = state.questions.swipe[state.qIdx.swipe];
+  document.getElementById('btnLeft').disabled  = true;
+  document.getElementById('btnRight').disabled = true;
+  const card = document.getElementById('swipeCard');
+  if (card) card.classList.add(isService ? 'swipe-right' : 'swipe-left');
+  const ok = isService === q.isService;
+  if (ok) { const pts = addScore(100); setTimeout(() => showFeedback(true, pts, q.exp), 280); }
+  else { state.combo = 0; updateHeader(); setTimeout(() => showFeedback(false, 0, q.exp), 280); }
+}
+
+// ════════════════════════════════════════
+//  SETUP GUIDE
+// ════════════════════════════════════════
+function showSetupGuide() {
+  alert(`📋 구글 앱스크립트 배포 방법\n\n1. 구글 스프레드시트 새 파일 생성\n2. 확장 프로그램 > Apps Script 클릭\n3. Code.gs 파일의 코드 전체 붙여넣기\n4. 저장 후 [배포 > 새 배포] 클릭\n5. 종류: '웹 앱' 선택\n   실행 계정: 나\n   액세스: '모든 사용자'\n6. 배포 후 URL 복사\n7. 이 HTML 파일 상단의\n   SCRIPT_URL = '여기에 붙여넣기'`);
+  return false;
+}
+
+// ════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════
+loadIntroRanking();
+</script>
+</body>
+</html>
