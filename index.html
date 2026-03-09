@@ -6,252 +6,274 @@
 <title>🛍️ 경제 마켓 - 재화 분류 게임</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Gaegu:wght@700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream: #FFF8F0; --peach: #FFB997; --peach-light: #FFD9C7;
-    --coral: #FF7B5C; --coral-dark: #E85D3F;
-    --mint: #6ECFB5;  --mint-dark: #4AB89C;
-    --sky: #7CC4F0;   --sky-dark: #5AA8D8;
-    --lemon: #FFE566; --lavender: #C4A8FF; --lavender-dark: #A080E8;
-    --text-dark: #2D2D2D; --text-mid: #5A5A5A; --text-light: #999;
-    --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
-    --shadow-card: 0 6px 24px rgba(0,0,0,0.12);
-    --shadow-float: 0 12px 40px rgba(0,0,0,0.18);
-    --r-lg: 24px; --r-md: 16px; --r-sm: 10px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;overflow-x:hidden;position:relative}
-  body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 10% 20%,rgba(255,185,151,.3) 0%,transparent 40%),radial-gradient(circle at 90% 80%,rgba(110,207,181,.25) 0%,transparent 40%),radial-gradient(circle at 50% 50%,rgba(255,229,102,.15) 0%,transparent 60%);pointer-events:none;z-index:0}
-  .screen{display:none;position:relative;z-index:1;min-height:100vh;animation:fadeIn .4s ease}
-  .screen.active{display:flex;flex-direction:column}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes pop{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
-  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
-  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-  @keyframes swipeOutLeft{to{transform:translateX(-150%) rotate(-15deg);opacity:0}}
-  @keyframes swipeOutRight{to{transform:translateX(150%) rotate(15deg);opacity:0}}
-  @keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
-  @keyframes correctPulse{0%{background:rgba(110,207,181,.4)}100%{background:white}}
-  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+:root {
+  --cream:#FFF8F0;--peach:#FFB997;--peach-light:#FFD9C7;
+  --coral:#FF7B5C;--coral-dark:#E85D3F;
+  --mint:#6ECFB5;--mint-dark:#4AB89C;
+  --sky:#7CC4F0;--sky-dark:#5AA8D8;
+  --lemon:#FFE566;--lavender:#C4A8FF;--lavender-dark:#A080E8;
+  --text-dark:#2D2D2D;--text-mid:#5A5A5A;--text-light:#999;
+  --shadow-soft:0 4px 20px rgba(0,0,0,.08);
+  --shadow-card:0 6px 24px rgba(0,0,0,.12);
+  --shadow-float:0 12px 40px rgba(0,0,0,.18);
+  --r-lg:24px;--r-md:16px;--r-sm:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--cream);color:var(--text-dark);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 10% 20%,rgba(255,185,151,.3) 0%,transparent 40%),radial-gradient(circle at 90% 80%,rgba(110,207,181,.25) 0%,transparent 40%),radial-gradient(circle at 50% 50%,rgba(255,229,102,.15) 0%,transparent 60%);pointer-events:none;z-index:0}
+.screen{display:none;position:relative;z-index:1;min-height:100vh;animation:fadeIn .4s ease}
+.screen.active{display:flex;flex-direction:column}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes swipeOutLeft{to{transform:translateX(-150%) rotate(-15deg);opacity:0}}
+@keyframes swipeOutRight{to{transform:translateX(150%) rotate(15deg);opacity:0}}
+@keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+@keyframes correctPulse{0%{background:rgba(110,207,181,.4)}100%{background:white}}
+@keyframes timerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 
-  /* ── INTRO ── */
-  #screen-intro{align-items:center;justify-content:center;padding:28px 24px;gap:0;text-align:center}
-  .intro-deco{font-size:72px;animation:float 3s ease-in-out infinite;display:block;margin-bottom:6px}
-  .game-title{font-family:'Gaegu',cursive;font-size:44px;color:var(--coral);line-height:1;text-shadow:3px 3px 0 rgba(255,123,92,.2)}
-  .game-subtitle{font-size:13px;color:var(--text-mid);margin-bottom:28px;background:white;display:inline-block;padding:4px 14px;border-radius:20px;border:2px solid var(--peach)}
-  .intro-card{background:white;border-radius:var(--r-lg);padding:24px;width:100%;max-width:400px;box-shadow:var(--shadow-card);margin-bottom:16px;border:2px solid var(--peach-light)}
-  .intro-card h3{font-size:14px;font-weight:700;color:var(--text-mid);margin-bottom:10px}
-  .nickname-input{width:100%;padding:13px 18px;border:2.5px solid var(--peach);border-radius:var(--r-md);font-size:18px;font-family:'Noto Sans KR',sans-serif;font-weight:700;background:var(--cream);color:var(--text-dark);outline:none;transition:all .2s;text-align:center}
-  .nickname-input:focus{border-color:var(--coral);background:white;box-shadow:0 0 0 4px rgba(255,123,92,.12)}
-  .nickname-input::placeholder{color:var(--text-light);font-weight:400}
-  .input-msg{font-size:12px;margin-top:8px;min-height:18px;transition:all .2s}
-  .btn-start{width:100%;max-width:400px;padding:17px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;border:none;border-radius:var(--r-md);font-size:19px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(255,123,92,.4),0 3px 0 var(--coral-dark);letter-spacing:1px;margin-bottom:16px}
-  .btn-start:hover{transform:translateY(-2px)}
-  .btn-start:active{transform:translateY(1px)}
-  .btn-start:disabled{background:#ccc;box-shadow:0 3px 0 #aaa;cursor:not-allowed;transform:none}
-  .ranking-preview{width:100%;max-width:400px;background:white;border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow-soft);border:2px solid var(--peach-light)}
-  .ranking-preview h4{font-size:13px;font-weight:700;color:var(--text-mid);margin-bottom:10px;display:flex;align-items:center;gap:6px}
-  .mini-rank-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--peach-light);font-size:13px}
-  .mini-rank-item:last-child{border:none}
-  .mini-rank-num{font-weight:900;color:var(--coral);width:22px}
-  .mini-rank-name{flex:1;font-weight:500}
-  .mini-rank-score{font-weight:700;color:var(--mint-dark)}
+/* ── INTRO ── */
+#screen-intro{align-items:center;justify-content:flex-start;padding:28px 20px 32px;gap:0;text-align:center;overflow-y:auto}
+.intro-deco{font-size:64px;animation:float 3s ease-in-out infinite;display:block;margin-bottom:4px}
+.game-title{font-family:'Gaegu',cursive;font-size:42px;color:var(--coral);line-height:1;text-shadow:3px 3px 0 rgba(255,123,92,.2)}
+.game-subtitle{font-size:12px;color:var(--text-mid);margin-bottom:22px;background:white;display:inline-block;padding:4px 14px;border-radius:20px;border:2px solid var(--peach)}
+.intro-card{background:white;border-radius:var(--r-lg);padding:20px;width:100%;max-width:400px;box-shadow:var(--shadow-card);margin-bottom:14px;border:2px solid var(--peach-light)}
+.intro-card h3{font-size:13px;font-weight:700;color:var(--text-mid);margin-bottom:9px}
+.nickname-input{width:100%;padding:12px 16px;border:2.5px solid var(--peach);border-radius:var(--r-md);font-size:17px;font-family:'Noto Sans KR',sans-serif;font-weight:700;background:var(--cream);color:var(--text-dark);outline:none;transition:all .2s;text-align:center}
+.nickname-input:focus{border-color:var(--coral);background:white;box-shadow:0 0 0 4px rgba(255,123,92,.12)}
+.nickname-input::placeholder{color:var(--text-light);font-weight:400;font-size:14px}
+.input-msg{font-size:12px;margin-top:7px;min-height:16px;transition:all .2s}
+.btn-start{width:100%;max-width:400px;padding:16px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;border:none;border-radius:var(--r-md);font-size:18px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(255,123,92,.4),0 3px 0 var(--coral-dark);letter-spacing:1px;margin-bottom:14px}
+.btn-start:hover{transform:translateY(-2px)}
+.btn-start:active{transform:translateY(1px)}
+.btn-start:disabled{background:#ccc;box-shadow:0 3px 0 #aaa;cursor:not-allowed;transform:none}
 
-  /* ── TUTORIAL ── */
-  #screen-tutorial{padding:24px;align-items:center;gap:14px}
-  .tut-title{font-family:'Gaegu',cursive;font-size:28px;color:var(--coral);text-align:center}
-  .game-card-preview{background:white;border-radius:var(--r-md);padding:15px 18px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow-soft);border:2px solid var(--peach-light);cursor:pointer;transition:all .2s;width:100%;max-width:400px}
-  .game-card-preview:hover{transform:translateX(4px);box-shadow:var(--shadow-card)}
-  .gcp-icon{font-size:34px}
-  .gcp-info h3{font-size:14px;font-weight:700;margin-bottom:2px}
-  .gcp-info p{font-size:11px;color:var(--text-mid)}
-  .gcp-badge{margin-left:auto;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
-  .btn-green{width:100%;max-width:400px;padding:17px;background:linear-gradient(135deg,var(--mint),var(--mint-dark));color:white;border:none;border-radius:var(--r-md);font-size:17px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(110,207,181,.4),0 3px 0 var(--mint-dark)}
-  .btn-green:hover{transform:translateY(-2px)}
-  .btn-ghost{width:100%;max-width:400px;padding:13px;background:white;color:var(--text-mid);border:2px solid var(--peach);border-radius:var(--r-md);font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s}
-  .btn-ghost:hover{border-color:var(--coral);color:var(--coral)}
+/* ── INTRO RANKING (게임별 탭) ── */
+.rank-preview-box{width:100%;max-width:400px;background:white;border-radius:var(--r-lg);padding:16px;box-shadow:var(--shadow-soft);border:2px solid var(--peach-light);margin-top:4px}
+.rank-tabs{display:flex;gap:6px;margin-bottom:12px}
+.rank-tab{flex:1;padding:7px 4px;border-radius:var(--r-sm);border:2px solid var(--peach-light);background:white;font-size:11px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s;color:var(--text-mid)}
+.rank-tab.active{color:white;border-color:transparent}
+.rank-tab[data-game="0"].active{background:var(--coral)}
+.rank-tab[data-game="1"].active{background:var(--sky-dark)}
+.rank-tab[data-game="2"].active{background:var(--lavender-dark)}
+.mini-rank-item{display:flex;align-items:center;gap:9px;padding:5px 0;border-bottom:1px solid var(--peach-light);font-size:12px}
+.mini-rank-item:last-child{border:none}
+.mini-rank-num{font-weight:900;color:var(--coral);width:20px;text-align:center}
+.mini-rank-name{flex:1;font-weight:500;text-align:left}
+.mini-rank-score{font-weight:700;color:var(--mint-dark)}
 
-  /* ── GAME HEADER ── */
-  #screen-game{padding:0;position:relative}
-  .game-header{background:white;padding:12px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,.06);position:sticky;top:0;z-index:100}
-  .stage-lbl{font-size:11px;font-weight:700;color:white;padding:4px 10px;border-radius:20px;white-space:nowrap}
-  .prog-bar{flex:1;height:8px;background:var(--peach-light);border-radius:4px;overflow:hidden}
-  .prog-fill{height:100%;background:linear-gradient(90deg,var(--coral),var(--peach));border-radius:4px;transition:width .3s ease}
-  .score-disp{font-weight:900;font-size:15px;color:var(--coral);white-space:nowrap}
-  .combo-disp{font-size:11px;font-weight:700;color:var(--lavender-dark);white-space:nowrap}
-  .game-area{flex:1;padding:18px;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:500px;margin:0 auto;width:100%}
-  .q-label{background:white;border-radius:var(--r-md);padding:12px 16px;width:100%;text-align:center;box-shadow:var(--shadow-soft);border:2px solid var(--peach-light)}
-  .q-label h2{font-size:14px;font-weight:900;margin-bottom:2px}
-  .q-label p{font-size:11px;color:var(--text-mid)}
-  .q-dots{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;width:100%}
-  .q-dot{width:10px;height:10px;border-radius:50%;background:var(--peach-light);transition:all .3s}
-  .q-dot.done{background:var(--mint)}
-  .q-dot.curr{background:var(--coral);transform:scale(1.3)}
+/* ── TUTORIAL ── */
+#screen-tutorial{padding:24px;align-items:center;gap:12px}
+.tut-title{font-family:'Gaegu',cursive;font-size:26px;color:var(--coral);text-align:center}
+.game-card-preview{background:white;border-radius:var(--r-md);padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-soft);border:2px solid var(--peach-light);cursor:pointer;transition:all .2s;width:100%;max-width:400px}
+.game-card-preview:hover{transform:translateX(4px);box-shadow:var(--shadow-card)}
+.gcp-icon{font-size:32px}
+.gcp-info h3{font-size:13px;font-weight:700;margin-bottom:2px}
+.gcp-info p{font-size:11px;color:var(--text-mid)}
+.gcp-badge{margin-left:auto;padding:4px 9px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+.btn-green{width:100%;max-width:400px;padding:16px;background:linear-gradient(135deg,var(--mint),var(--mint-dark));color:white;border:none;border-radius:var(--r-md);font-size:16px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 6px 20px rgba(110,207,181,.4),0 3px 0 var(--mint-dark)}
+.btn-green:hover{transform:translateY(-2px)}
+.btn-ghost{width:100%;max-width:400px;padding:12px;background:white;color:var(--text-mid);border:2px solid var(--peach);border-radius:var(--r-md);font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s}
+.btn-ghost:hover{border-color:var(--coral);color:var(--coral)}
 
-  /* ── SHELF GAME ── */
-  .shelves{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%}
-  .shelf{background:white;border-radius:var(--r-md);padding:10px;min-height:76px;border:2.5px dashed var(--peach);transition:all .2s;text-align:center;cursor:pointer}
-  .shelf.highlight{border-style:solid;transform:scale(1.03)}
-  .shelf.correct-drop{animation:correctPulse .4s ease}
-  .shelf.wrong-drop{animation:shake .3s ease}
-  .shelf-lbl{font-size:11px;font-weight:700;color:var(--text-mid);margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:3px}
-  .shelf-items{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;min-height:22px}
-  .shelf-tag{background:var(--peach-light);border-radius:6px;padding:2px 6px;font-size:10px;font-weight:500;animation:pop .2s ease}
-  .drag-card{background:white;border-radius:var(--r-md);padding:14px 20px;text-align:center;box-shadow:var(--shadow-float);border:2.5px solid var(--peach);cursor:grab;user-select:none;transition:all .15s;touch-action:none;min-width:150px}
-  .drag-card:active{cursor:grabbing;transform:scale(1.06) rotate(2deg)}
-  .drag-card.dragging{opacity:.85;transform:scale(1.08) rotate(3deg);position:fixed;z-index:1000;pointer-events:none}
-  .card-emoji{font-size:34px;display:block;margin-bottom:4px}
-  .card-name{font-size:16px;font-weight:700}
-  .card-hint{font-size:11px;color:var(--text-light);margin-top:2px}
+/* ── GAME HEADER ── */
+#screen-game{padding:0;position:relative}
+.game-header{background:white;padding:10px 16px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 12px rgba(0,0,0,.06);position:sticky;top:0;z-index:100}
+.stage-lbl{font-size:10px;font-weight:700;color:white;padding:4px 9px;border-radius:20px;white-space:nowrap}
+.prog-bar{flex:1;height:7px;background:var(--peach-light);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--coral),var(--peach));border-radius:4px;transition:width .3s ease}
+.score-disp{font-weight:900;font-size:14px;color:var(--coral);white-space:nowrap}
+.combo-disp{font-size:10px;font-weight:700;color:var(--lavender-dark);white-space:nowrap}
 
-  /* ── PAIR GAME ── */
-  .pair-box{background:white;border-radius:var(--r-lg);padding:18px;text-align:center;width:100%;box-shadow:var(--shadow-card);border:2.5px solid var(--sky)}
-  .pair-box-lbl{font-size:11px;font-weight:700;color:var(--sky-dark);margin-bottom:8px}
-  .relation-opts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;width:100%}
-  .rel-btn{padding:10px 18px;border-radius:20px;border:2px solid var(--peach);background:white;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s;color:var(--text-dark)}
-  .rel-btn:hover{background:var(--peach-light);border-color:var(--coral)}
-  .rel-btn:disabled{cursor:default}
-  .rel-btn.correct{background:rgba(110,207,181,.3);border-color:var(--mint-dark);color:var(--mint-dark)}
-  .rel-btn.wrong{background:rgba(255,123,92,.15);border-color:var(--coral);color:var(--coral);animation:shake .3s ease}
+/* ── TIMER ── */
+.timer-bar-wrap{width:100%;background:var(--peach-light);height:6px}
+.timer-bar-fill{height:100%;background:linear-gradient(90deg,var(--mint),var(--coral));transition:width .1s linear;border-radius:0 3px 3px 0}
+.timer-display{font-family:'Gaegu',cursive;font-size:28px;color:var(--coral);font-weight:700;text-align:center;line-height:1}
+.timer-display.urgent{animation:timerPulse .4s ease infinite;color:#ff3b3b}
 
-  /* ── SWIPE GAME ── */
-  .swipe-container{position:relative;width:100%;height:210px}
-  .swipe-card{position:absolute;top:0;left:50%;transform:translateX(-50%);background:white;border-radius:var(--r-lg);padding:22px 18px;width:90%;max-width:340px;box-shadow:var(--shadow-float);border:2.5px solid var(--lavender);text-align:center;cursor:grab;touch-action:none;user-select:none}
-  .swipe-card.swiping{transition:none}
-  .swipe-card.swipe-left{animation:swipeOutLeft .3s ease forwards}
-  .swipe-card.swipe-right{animation:swipeOutRight .3s ease forwards}
-  .swipe-ind{position:absolute;top:50%;transform:translateY(-50%);font-size:36px;font-weight:900;pointer-events:none;opacity:0;transition:opacity .1s;z-index:10}
-  .swipe-ind.left{left:8px;color:var(--sky-dark)}
-  .swipe-ind.right{right:8px;color:var(--coral)}
-  .swipe-emoji{font-size:42px;display:block;margin-bottom:8px}
-  .swipe-name{font-size:20px;font-weight:900;margin-bottom:4px}
-  .swipe-desc{font-size:11px;color:var(--text-mid)}
-  .swipe-dir{display:flex;justify-content:space-between;width:100%;padding:0 8px}
-  .swipe-dir-item{display:flex;flex-direction:column;align-items:center;gap:2px}
-  .swipe-dir-item span{font-size:18px}
-  .swipe-dir-item p{font-size:11px;font-weight:700;text-align:center}
-  .swipe-btns{display:flex;gap:12px;justify-content:center;width:100%}
-  .swipe-btn{flex:1;max-width:140px;padding:13px;border:none;border-radius:var(--r-md);font-size:14px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s}
-  .swipe-btn.left-btn{background:linear-gradient(135deg,var(--sky),var(--sky-dark));color:white;box-shadow:0 4px 14px rgba(124,196,240,.4)}
-  .swipe-btn.right-btn{background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;box-shadow:0 4px 14px rgba(255,123,92,.4)}
-  .swipe-btn:active{transform:scale(.95)}
-  .swipe-btn:disabled{opacity:.5;cursor:default}
+.game-area{flex:1;padding:16px;display:flex;flex-direction:column;align-items:center;gap:12px;max-width:500px;margin:0 auto;width:100%}
+.q-label{background:white;border-radius:var(--r-md);padding:10px 14px;width:100%;text-align:center;box-shadow:var(--shadow-soft);border:2px solid var(--peach-light)}
+.q-label h2{font-size:13px;font-weight:900;margin-bottom:2px}
+.q-label p{font-size:10px;color:var(--text-mid)}
+.q-dots{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;width:100%}
+.q-dot{width:9px;height:9px;border-radius:50%;background:var(--peach-light);transition:all .3s}
+.q-dot.done{background:var(--mint)}
+.q-dot.curr{background:var(--coral);transform:scale(1.3)}
 
-  /* ── FEEDBACK ── */
-  .fb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:499;display:none;backdrop-filter:blur(2px)}
-  .fb-overlay.show{display:block}
-  .fb-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:500;background:white;border-radius:var(--r-lg);padding:22px 28px;text-align:center;box-shadow:var(--shadow-float);min-width:260px;max-width:320px;width:90%;display:none;animation:pop .3s ease}
-  .fb-popup.show{display:block}
-  .fb-popup.correct-fb{border:3px solid var(--mint)}
-  .fb-popup.wrong-fb{border:3px solid var(--coral)}
-  .fb-big{font-size:46px;display:block;margin-bottom:6px}
-  .fb-result{font-size:21px;font-weight:900;margin-bottom:4px}
-  .fb-result.ok{color:var(--mint-dark)}
-  .fb-result.ng{color:var(--coral)}
-  .fb-pts{font-size:15px;font-weight:700;color:var(--lavender-dark);margin-bottom:8px}
-  .fb-exp{font-size:12px;color:var(--text-mid);line-height:1.6;border-top:1px solid var(--peach-light);padding-top:8px;margin-top:4px}
-  .fb-tap{font-size:11px;color:var(--text-light);margin-top:6px}
+/* ── SHELF (2-choice) ── */
+.shelves-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.shelf{background:white;border-radius:var(--r-md);padding:12px 10px;min-height:80px;border:2.5px dashed var(--peach);transition:all .2s;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.shelf:hover{transform:scale(1.03)}
+.shelf.highlight{border-style:solid;transform:scale(1.05)}
+.shelf.correct-drop{animation:correctPulse .4s ease}
+.shelf.wrong-drop{animation:shake .3s ease}
+.shelf-icon{font-size:26px}
+.shelf-lbl{font-size:13px;font-weight:900}
+.shelf-desc{font-size:10px;color:var(--text-light)}
+.shelf-items{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin-top:4px}
+.shelf-tag{background:var(--peach-light);border-radius:6px;padding:2px 6px;font-size:10px;font-weight:500;animation:pop .2s ease}
 
-  /* ── STAGE TRANSITION ── */
-  .stage-trans{position:fixed;inset:0;background:white;z-index:600;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:36px}
-  .stage-trans.show{display:flex;animation:pop .4s ease}
-  .stage-trans-emoji{font-size:68px;animation:bounce 1s ease infinite}
-  .stage-trans-title{font-family:'Gaegu',cursive;font-size:30px;color:var(--coral)}
-  .stage-trans-btn{margin-top:12px;padding:15px 38px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;border:none;border-radius:var(--r-md);font-size:17px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(255,123,92,.4)}
+/* score counter in shelf game */
+.shelf-score-counter{text-align:center;background:white;border-radius:var(--r-md);padding:8px 20px;box-shadow:var(--shadow-soft);border:2px solid var(--peach-light)}
+.shelf-score-counter span{font-family:'Gaegu',cursive;font-size:32px;color:var(--coral)}
+.shelf-score-counter p{font-size:11px;color:var(--text-mid)}
 
-  /* ── RESULT ── */
-  #screen-result{padding:22px;align-items:center;gap:14px}
-  .res-emoji{font-size:60px;display:block;animation:bounce 1s ease infinite;text-align:center}
-  .res-title{font-family:'Gaegu',cursive;font-size:32px;color:var(--coral);text-align:center}
-  .res-score-card{background:white;border-radius:var(--r-lg);padding:22px;width:100%;max-width:400px;box-shadow:var(--shadow-card);border:3px solid var(--peach);text-align:center}
-  .res-score-big{font-family:'Gaegu',cursive;font-size:62px;color:var(--coral);line-height:1}
-  .res-score-lbl{font-size:12px;color:var(--text-mid);margin-bottom:14px}
-  .res-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;border-top:1px solid var(--peach-light);padding-top:10px}
-  .res-stat-val{font-size:20px;font-weight:900}
-  .res-stat-lbl{font-size:10px;color:var(--text-light)}
-  .rank-board{background:white;border-radius:var(--r-lg);padding:18px;width:100%;max-width:400px;box-shadow:var(--shadow-card);border:2px solid var(--peach-light)}
-  .rank-board-title{font-size:15px;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:6px}
-  .rank-item{display:flex;align-items:center;gap:10px;padding:9px 6px;border-radius:var(--r-sm);margin-bottom:3px}
-  .rank-item.r1{background:rgba(255,229,102,.3)}
-  .rank-item.r2{background:rgba(200,200,200,.2)}
-  .rank-item.r3{background:rgba(255,185,151,.2)}
-  .rank-item.me{border:2px solid var(--coral)}
-  .rank-num{font-size:18px;width:28px;text-align:center}
-  .rank-name{flex:1;font-weight:700;font-size:13px}
-  .rank-score{font-weight:900;font-size:15px;color:var(--coral)}
-  .rank-me-badge{font-size:10px;background:var(--coral);color:white;padding:2px 6px;border-radius:10px}
-  .res-btns{display:flex;flex-direction:column;gap:9px;width:100%;max-width:400px}
-  .btn-coral{padding:15px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;border:none;border-radius:var(--r-md);font-size:16px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 5px 14px rgba(255,123,92,.35);transition:all .2s}
-  .btn-coral:hover{transform:translateY(-2px)}
+.drag-card{background:white;border-radius:var(--r-md);padding:16px 24px;text-align:center;box-shadow:var(--shadow-float);border:2.5px solid var(--peach);cursor:grab;user-select:none;transition:all .15s;touch-action:none;min-width:150px}
+.drag-card:active{cursor:grabbing;transform:scale(1.06) rotate(2deg)}
+.drag-card.dragging{opacity:.85;transform:scale(1.08) rotate(3deg);position:fixed;z-index:1000;pointer-events:none}
+.card-emoji{font-size:36px;display:block;margin-bottom:4px}
+.card-name{font-size:17px;font-weight:700}
+.card-context{font-size:11px;color:var(--text-mid);margin-top:3px;font-style:italic}
 
-  /* ── MISC ── */
-  .confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;pointer-events:none;z-index:999;animation:confetti-fall 2.5s ease-in forwards}
-  .toast{position:fixed;top:78px;left:50%;transform:translateX(-50%);background:var(--text-dark);color:white;padding:9px 18px;border-radius:20px;font-size:12px;font-weight:500;z-index:800;opacity:0;transition:opacity .3s;white-space:nowrap}
-  .toast.show{opacity:1}
-  .loading-overlay{position:fixed;inset:0;background:var(--cream);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
-  .loading-spinner{width:46px;height:46px;border:4px solid var(--peach-light);border-top-color:var(--coral);border-radius:50%;animation:spin .8s linear infinite}
-  .high-score-badge{display:inline-block;background:linear-gradient(135deg,var(--lemon),#F0D040);color:var(--text-dark);font-size:12px;font-weight:900;padding:4px 12px;border-radius:20px;margin-top:6px;animation:pop .4s ease}
-  .setup-notice{background:rgba(255,185,151,.2);border:1.5px solid var(--peach);border-radius:var(--r-sm);padding:10px 14px;font-size:12px;color:var(--text-mid);width:100%;max-width:400px;text-align:center;line-height:1.6}
-  .setup-notice a{color:var(--coral);font-weight:700}
+/* ── PAIR ── */
+.pair-box{background:white;border-radius:var(--r-lg);padding:16px;text-align:center;width:100%;box-shadow:var(--shadow-card);border:2.5px solid var(--sky)}
+.pair-box-lbl{font-size:11px;font-weight:700;color:var(--sky-dark);margin-bottom:7px}
+.relation-opts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;width:100%}
+.rel-btn{padding:10px 18px;border-radius:20px;border:2px solid var(--peach);background:white;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .15s;color:var(--text-dark)}
+.rel-btn:hover{background:var(--peach-light);border-color:var(--coral)}
+.rel-btn:disabled{cursor:default}
+.rel-btn.correct{background:rgba(110,207,181,.3);border-color:var(--mint-dark);color:var(--mint-dark)}
+.rel-btn.wrong{background:rgba(255,123,92,.15);border-color:var(--coral);color:var(--coral);animation:shake .3s ease}
+
+/* ── SWIPE ── */
+.swipe-container{position:relative;width:100%;height:200px}
+.swipe-card{position:absolute;top:0;left:50%;transform:translateX(-50%);background:white;border-radius:var(--r-lg);padding:20px 16px;width:90%;max-width:320px;box-shadow:var(--shadow-float);border:2.5px solid var(--lavender);text-align:center;cursor:grab;touch-action:none;user-select:none}
+.swipe-card.swiping{transition:none}
+.swipe-card.swipe-left{animation:swipeOutLeft .3s ease forwards}
+.swipe-card.swipe-right{animation:swipeOutRight .3s ease forwards}
+.swipe-ind{position:absolute;top:50%;transform:translateY(-50%);font-size:32px;font-weight:900;pointer-events:none;opacity:0;transition:opacity .1s;z-index:10}
+.swipe-ind.left{left:6px;color:var(--sky-dark)}
+.swipe-ind.right{right:6px;color:var(--coral)}
+.swipe-emoji{font-size:40px;display:block;margin-bottom:6px}
+.swipe-name{font-size:19px;font-weight:900;margin-bottom:3px}
+.swipe-desc{font-size:11px;color:var(--text-mid)}
+.swipe-dir{display:flex;justify-content:space-between;width:100%;padding:0 6px}
+.swipe-dir-item{display:flex;flex-direction:column;align-items:center;gap:2px}
+.swipe-dir-item span{font-size:16px}
+.swipe-dir-item p{font-size:10px;font-weight:700;text-align:center}
+.swipe-btns{display:flex;gap:10px;justify-content:center;width:100%}
+.swipe-btn{flex:1;max-width:130px;padding:12px;border:none;border-radius:var(--r-md);font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;transition:all .2s}
+.swipe-btn.left-btn{background:linear-gradient(135deg,var(--sky),var(--sky-dark));color:white;box-shadow:0 4px 12px rgba(124,196,240,.4)}
+.swipe-btn.right-btn{background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;box-shadow:0 4px 12px rgba(255,123,92,.4)}
+.swipe-btn:active{transform:scale(.95)}
+.swipe-btn:disabled{opacity:.5;cursor:default}
+
+/* ── FEEDBACK ── */
+.fb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:499;display:none;backdrop-filter:blur(2px)}
+.fb-overlay.show{display:block}
+.fb-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:500;background:white;border-radius:var(--r-lg);padding:20px 26px;text-align:center;box-shadow:var(--shadow-float);min-width:250px;max-width:310px;width:90%;display:none;animation:pop .3s ease}
+.fb-popup.show{display:block}
+.fb-popup.correct-fb{border:3px solid var(--mint)}
+.fb-popup.wrong-fb{border:3px solid var(--coral)}
+.fb-big{font-size:44px;display:block;margin-bottom:5px}
+.fb-result{font-size:20px;font-weight:900;margin-bottom:3px}
+.fb-result.ok{color:var(--mint-dark)}
+.fb-result.ng{color:var(--coral)}
+.fb-pts{font-size:14px;font-weight:700;color:var(--lavender-dark);margin-bottom:7px}
+.fb-exp{font-size:12px;color:var(--text-mid);line-height:1.6;border-top:1px solid var(--peach-light);padding-top:7px;margin-top:3px}
+.fb-tap{font-size:10px;color:var(--text-light);margin-top:5px}
+
+/* ── STAGE TRANSITION ── */
+.stage-trans{position:fixed;inset:0;background:white;z-index:600;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:32px}
+.stage-trans.show{display:flex;animation:pop .4s ease}
+.stage-trans-emoji{font-size:64px;animation:bounce 1s ease infinite}
+.stage-trans-title{font-family:'Gaegu',cursive;font-size:28px;color:var(--coral)}
+.stage-trans-btn{margin-top:10px;padding:14px 36px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;border:none;border-radius:var(--r-md);font-size:16px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 6px 20px rgba(255,123,92,.4)}
+
+/* ── RESULT ── */
+#screen-result{padding:20px;align-items:center;gap:12px;overflow-y:auto}
+.res-emoji{font-size:56px;display:block;animation:bounce 1s ease infinite;text-align:center}
+.res-title{font-family:'Gaegu',cursive;font-size:30px;color:var(--coral);text-align:center}
+.res-score-card{background:white;border-radius:var(--r-lg);padding:20px;width:100%;max-width:400px;box-shadow:var(--shadow-card);border:3px solid var(--peach);text-align:center}
+.res-score-big{font-family:'Gaegu',cursive;font-size:58px;color:var(--coral);line-height:1}
+.res-score-lbl{font-size:11px;color:var(--text-mid);margin-bottom:12px}
+.res-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;border-top:1px solid var(--peach-light);padding-top:9px}
+.res-stat-val{font-size:19px;font-weight:900}
+.res-stat-lbl{font-size:10px;color:var(--text-light)}
+.high-score-badge{display:inline-block;background:linear-gradient(135deg,var(--lemon),#F0D040);color:var(--text-dark);font-size:12px;font-weight:900;padding:4px 12px;border-radius:20px;margin-top:5px;animation:pop .4s ease}
+
+/* result ranking */
+.res-rank-box{width:100%;max-width:400px;background:white;border-radius:var(--r-lg);padding:16px;box-shadow:var(--shadow-card);border:2px solid var(--peach-light)}
+.res-rank-title{font-size:14px;font-weight:900;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.rank-item{display:flex;align-items:center;gap:9px;padding:8px 5px;border-radius:var(--r-sm);margin-bottom:3px}
+.rank-item.r1{background:rgba(255,229,102,.3)}
+.rank-item.r2{background:rgba(200,200,200,.2)}
+.rank-item.r3{background:rgba(255,185,151,.2)}
+.rank-item.me{border:2px solid var(--coral)}
+.rank-num{font-size:16px;width:26px;text-align:center}
+.rank-name{flex:1;font-weight:700;font-size:12px}
+.rank-score{font-weight:900;font-size:14px;color:var(--coral)}
+.rank-me-badge{font-size:9px;background:var(--coral);color:white;padding:2px 5px;border-radius:10px}
+
+.res-btns{display:flex;flex-direction:column;gap:8px;width:100%;max-width:400px}
+.btn-coral{padding:14px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:white;border:none;border-radius:var(--r-md);font-size:15px;font-weight:900;font-family:'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 5px 14px rgba(255,123,92,.35);transition:all .2s}
+.btn-coral:hover{transform:translateY(-2px)}
+
+/* misc */
+.confetti-piece{position:fixed;width:10px;height:10px;border-radius:2px;pointer-events:none;z-index:999;animation:confetti-fall 2.5s ease-in forwards}
+.toast{position:fixed;top:72px;left:50%;transform:translateX(-50%);background:var(--text-dark);color:white;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:500;z-index:800;opacity:0;transition:opacity .3s;white-space:nowrap}
+.toast.show{opacity:1}
+.loading-overlay{position:fixed;inset:0;background:var(--cream);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+.loading-spinner{width:44px;height:44px;border:4px solid var(--peach-light);border-top-color:var(--coral);border-radius:50%;animation:spin .8s linear infinite}
 </style>
 </head>
 <body>
 
-<!-- ══════════ INTRO ══════════ -->
+<!-- ══ INTRO ══ -->
 <div id="screen-intro" class="screen active">
   <span class="intro-deco">🛍️</span>
   <h1 class="game-title">경제 마켓</h1>
   <p class="game-subtitle">재화와 용역 분류 게임</p>
-
   <div class="intro-card">
     <h3>📝 닉네임을 입력하세요</h3>
     <input type="text" class="nickname-input" id="nicknameInput" placeholder="예: 경제왕김민준" maxlength="10">
     <p class="input-msg" id="inputMsg" style="color:var(--text-light)">최대 10자 · 한글/영문/숫자 가능</p>
   </div>
-
   <button class="btn-start" id="btnStart" disabled onclick="startGame()">🎮 게임 시작하기</button>
-
-  <div class="ranking-preview" id="rankingPreview">
-    <h4>🏆 현재 랭킹</h4>
-    <div id="miniRankList"><p style="font-size:12px;color:var(--text-light);text-align:center">불러오는 중…</p></div>
-  </div>
-
-  <div class="setup-notice" id="setupNotice" style="display:none">
-    ⚙️ 구글 시트 연동 전입니다. <a href="#" onclick="showSetupGuide()">배포 설정 방법 보기</a>
+  <!-- 게임별 랭킹 탭 -->
+  <div class="rank-preview-box">
+    <div class="rank-tabs">
+      <button class="rank-tab active" data-game="0" onclick="switchIntroTab(0)">🏷️ 선반</button>
+      <button class="rank-tab" data-game="1" onclick="switchIntroTab(1)">🤝 짝꿍</button>
+      <button class="rank-tab" data-game="2" onclick="switchIntroTab(2)">⚡ 용역</button>
+    </div>
+    <div id="introRankBody"><p style="font-size:12px;color:var(--text-light);text-align:center">불러오는 중…</p></div>
   </div>
 </div>
 
-<!-- ══════════ TUTORIAL ══════════ -->
+<!-- ══ TUTORIAL ══ -->
 <div id="screen-tutorial" class="screen">
-  <div style="text-align:center;padding-top:24px">
+  <div style="text-align:center;padding-top:22px">
     <div class="tut-title">🎯 게임 안내</div>
-    <p style="font-size:13px;color:var(--text-mid);margin-top:4px">닉네임: <strong id="tutNickname"></strong></p>
+    <p style="font-size:12px;color:var(--text-mid);margin-top:3px">닉네임: <strong id="tutNickname"></strong></p>
   </div>
-  <div style="display:flex;flex-direction:column;gap:10px;padding:0 20px;width:100%;max-width:448px;margin:0 auto">
+  <div style="display:flex;flex-direction:column;gap:9px;padding:0 18px;width:100%;max-width:440px;margin:0 auto">
     <div class="game-card-preview" style="border-color:#FFD9C7" onclick="startMiniGame(0)">
       <span class="gcp-icon">🏷️</span>
-      <div class="gcp-info"><h3>선반 정리</h3><p>희소성 유무 · 사용 목적으로 분류</p></div>
-      <span class="gcp-badge" style="background:rgba(255,185,151,.3);color:#E85D3F">4분류</span>
+      <div class="gcp-info"><h3>선반 정리 <span style="color:var(--coral);font-size:11px">⏱️ 1분!</span></h3><p>희소성 유무 · 사용 목적으로 분류 · 2개 선택지</p></div>
+      <span class="gcp-badge" style="background:rgba(255,185,151,.3);color:#E85D3F">1분</span>
     </div>
     <div class="game-card-preview" style="border-color:#B8E8F8" onclick="startMiniGame(1)">
       <span class="gcp-icon">🤝</span>
-      <div class="gcp-info"><h3>짝꿍 찾기</h3><p>대체재·보완재·독립재·결합재 파악</p></div>
+      <div class="gcp-info"><h3>짝꿍 찾기</h3><p>대체재·보완재·독립재·결합재 관계 파악 · 12문제</p></div>
       <span class="gcp-badge" style="background:rgba(124,196,240,.3);color:#5AA8D8">관계분류</span>
     </div>
     <div class="game-card-preview" style="border-color:#E0D0FF" onclick="startMiniGame(2)">
       <span class="gcp-icon">⚡</span>
-      <div class="gcp-info"><h3>용역 레이더</h3><p>재화 vs 용역 · 직접/간접 구분</p></div>
-      <span class="gcp-badge" style="background:rgba(196,168,255,.3);color:#A080E8">좌우판정</span>
+      <div class="gcp-info"><h3>용역 레이더 <span style="color:var(--lavender-dark);font-size:11px">⏱️ 1분!</span></h3><p>재화 vs 용역 · 직접/간접 구분</p></div>
+      <span class="gcp-badge" style="background:rgba(196,168,255,.3);color:#A080E8">1분</span>
     </div>
   </div>
-  <div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:9px;width:100%;max-width:448px;margin:0 auto">
+  <div style="padding:0 18px 22px;display:flex;flex-direction:column;gap:8px;width:100%;max-width:440px;margin:0 auto">
     <button class="btn-green" onclick="startAllGames()">✨ 전체 게임 시작 (3스테이지)</button>
     <button class="btn-ghost" onclick="showScreen('screen-intro')">← 처음으로</button>
   </div>
 </div>
 
-<!-- ══════════ GAME ══════════ -->
+<!-- ══ GAME ══ -->
 <div id="screen-game" class="screen">
   <div class="game-header">
     <span class="stage-lbl" id="stageLbl" style="background:var(--coral)">Stage 1</span>
@@ -259,17 +281,20 @@
     <span class="score-disp" id="scoreDisp">0점</span>
     <span class="combo-disp" id="comboDisp"></span>
   </div>
+  <div class="timer-bar-wrap" id="timerBarWrap" style="display:none">
+    <div class="timer-bar-fill" id="timerBarFill" style="width:100%"></div>
+  </div>
   <div class="game-area" id="gameArea"></div>
 </div>
 
-<!-- ══════════ RESULT ══════════ -->
+<!-- ══ RESULT ══ -->
 <div id="screen-result" class="screen">
   <span class="res-emoji" id="resEmoji">🎉</span>
-  <div class="res-title">게임 완료!</div>
-  <p style="font-size:14px;color:var(--text-mid);text-align:center" id="resNickname"></p>
+  <div class="res-title" id="resTitle">게임 완료!</div>
+  <p style="font-size:13px;color:var(--text-mid);text-align:center" id="resNickname"></p>
   <div class="res-score-card">
     <div class="res-score-big" id="resScore">0</div>
-    <div class="res-score-lbl">최종 점수</div>
+    <div class="res-score-lbl" id="resScoreLbl">최종 점수</div>
     <div id="highScoreBadge"></div>
     <div class="res-stats">
       <div><div class="res-stat-val" id="resCorrect">0</div><div class="res-stat-lbl">정답 수</div></div>
@@ -277,9 +302,9 @@
       <div><div class="res-stat-val" id="resCombo">0</div><div class="res-stat-lbl">최고 콤보</div></div>
     </div>
   </div>
-  <div class="rank-board">
-    <div class="rank-board-title">🏆 전체 랭킹</div>
-    <div id="fullRankList"></div>
+  <div class="res-rank-box">
+    <div class="res-rank-title" id="resRankTitle">🏆 랭킹</div>
+    <div id="resRankList"></div>
   </div>
   <div class="res-btns">
     <button class="btn-coral" onclick="retryGame()">🔄 다시 도전하기</button>
@@ -301,89 +326,202 @@
 <div class="stage-trans" id="stageTrans">
   <span class="stage-trans-emoji" id="stEmoji">🎉</span>
   <div class="stage-trans-title" id="stTitle">스테이지 완료!</div>
-  <div style="font-size:14px;color:var(--text-mid)" id="stNext"></div>
-  <div style="font-size:20px;font-weight:900;color:var(--coral)" id="stPts"></div>
+  <div style="font-size:13px;color:var(--text-mid)" id="stNext"></div>
+  <div style="font-size:19px;font-weight:900;color:var(--coral)" id="stPts"></div>
   <button class="stage-trans-btn" id="stBtn">다음 →</button>
 </div>
 
 <!-- LOADING -->
 <div class="loading-overlay" id="loadingOverlay" style="display:none">
   <div class="loading-spinner"></div>
-  <div style="font-size:13px;color:var(--text-mid)" id="loadingText">불러오는 중…</div>
+  <div style="font-size:12px;color:var(--text-mid)" id="loadingText">불러오는 중…</div>
 </div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════════
-// ⚙️  구글 앱스크립트 URL 설정
-//    배포 후 여기에 URL을 붙여넣으세요
-// ════════════════════════════════════════
+// ══════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxv7bD88H99JmFgb-jQKTx7vRFzQIB-EYPbtaQreHpHCh1qg187JK0hdqmMJwbMc-g/exec';
 const IS_CONFIGURED = SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE';
+// 타임어택 시간 설정 (초) — shelf·swipe만 타임어택, pair는 문제 수 제한
+const GAME_TIME = { shelf: 60, pair: 0, swipe: 60 };
+const Q_COUNT = { shelf: 999, pair: 12, swipe: 999 };
 
-// ════════════════════════════════════════
-//  FULL QUESTION DATABASE
-// ════════════════════════════════════════
+// ══════════════════════════════════════
+//  DATABASE
+// ══════════════════════════════════════
+// shelf: category = 'scarcity'(경제재/자유재) or 'usage'(생산재/소비재)
+// correct: 정답 key
 const DB = {
   shelf: [
-    // 경제재
-    {emoji:"👗",name:"옷",shelf:"economic",hint:"대가를 지불해야 함",exp:"옷은 희소성이 있어 대가를 지불해야 얻을 수 있는 경제재예요."},
-    {emoji:"💻",name:"노트북",shelf:"economic",hint:"비용을 내야 함",exp:"노트북은 희소성이 있어 대가를 지불해야 하는 경제재예요."},
-    {emoji:"📱",name:"스마트폰",shelf:"economic",hint:"비싸게 팔림",exp:"스마트폰은 희소성이 있어 구매 비용이 드는 경제재예요."},
-    {emoji:"🚗",name:"자동차(생산용)",shelf:"economic",hint:"공장이 구매함",exp:"공장에서 사용하는 자동차도 희소성이 있는 경제재예요."},
-    {emoji:"🏠",name:"아파트",shelf:"economic",hint:"돈을 내야 함",exp:"아파트는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
-    {emoji:"💊",name:"약",shelf:"economic",hint:"약국에서 구매",exp:"약은 희소성이 있어 대가를 지불해야 하는 경제재예요."},
-    {emoji:"📚",name:"교과서",shelf:"economic",hint:"학교에서 구매",exp:"교과서는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
-    // 자유재
-    {emoji:"☀️",name:"햇빛",shelf:"free",hint:"무료로 얻을 수 있음",exp:"햇빛은 아무런 대가 없이 얻을 수 있는 자유재예요."},
-    {emoji:"💨",name:"바람",shelf:"free",hint:"자연에서 무료로",exp:"바람은 아무 대가 없이 얻을 수 있는 자유재예요."},
-    {emoji:"🌊",name:"바닷물",shelf:"free",hint:"무한히 있음",exp:"바닷물은 풍부해 대가 없이 얻을 수 있는 자유재예요."},
-    {emoji:"🌧️",name:"빗물",shelf:"free",hint:"하늘에서 내림",exp:"빗물은 자연에서 무상으로 주어지는 자유재예요."},
-    {emoji:"🌬️",name:"공기",shelf:"free",hint:"숨쉬기 무료",exp:"공기는 아무런 대가 없이 얻을 수 있는 자유재예요."},
-    // 생산재
-    {emoji:"🌾",name:"밀가루",shelf:"production",hint:"빵 만들 때 재료",exp:"밀가루는 빵이나 과자 생산에 쓰이는 생산재예요."},
-    {emoji:"🔩",name:"철강",shelf:"production",hint:"공장에서 원재료",exp:"철강은 자동차나 건물 생산에 쓰이는 생산재예요."},
-    {emoji:"🧵",name:"실",shelf:"production",hint:"옷 만들 때 씀",exp:"실은 옷 제조에 쓰이는 생산재(원재료)예요."},
-    {emoji:"🪵",name:"목재",shelf:"production",hint:"가구 만들 때 씀",exp:"목재는 가구 제조에 쓰이는 생산재(원재료)예요."},
-    {emoji:"⚙️",name:"공작기계",shelf:"production",hint:"물건 만드는 기계",exp:"공작기계는 생산 과정에 사용되는 생산재(자본재)예요."},
-    {emoji:"🚜",name:"트랙터",shelf:"production",hint:"농사에 사용",exp:"트랙터는 농업 생산에 쓰이는 생산재(자본재)예요."},
-    {emoji:"🛢️",name:"원유",shelf:"production",hint:"석유 정제 원료",exp:"원유는 석유 제품 생산에 쓰이는 생산재(원재료)예요."},
-    // 소비재
-    {emoji:"🍕",name:"피자",shelf:"consumption",hint:"먹기 위한 것",exp:"피자는 개인의 욕망 충족을 위해 소비되는 소비재예요."},
-    {emoji:"🍎",name:"사과",shelf:"consumption",hint:"직접 먹는 것",exp:"사과는 직접 먹기 위한 소비재예요."},
-    {emoji:"🎮",name:"게임기",shelf:"consumption",hint:"놀이를 위한 것",exp:"게임기는 개인 여가를 위한 소비재예요."},
-    {emoji:"👟",name:"운동화",shelf:"consumption",hint:"개인이 신는 것",exp:"운동화는 개인이 착용하기 위한 소비재예요."},
-    {emoji:"🧴",name:"샴푸",shelf:"consumption",hint:"머리 감을 때",exp:"샴푸는 개인 생활에 소비되는 소비재예요."},
-    {emoji:"🍫",name:"초콜릿",shelf:"consumption",hint:"먹기 위한 것",exp:"초콜릿은 개인 소비를 위한 소비재예요."},
-    {emoji:"🚗",name:"승용차",shelf:"consumption",hint:"개인이 타는 것",exp:"개인 이동용 승용차는 소비재예요."},
+    // ── 희소성 유무 (scarcity) — 경제재 20개 ──
+    {emoji:"👗",name:"옷",cat:"scarcity",correct:"economic",context:"백화점에서 파는 것",exp:"옷은 희소성이 있어 대가를 지불해야 얻는 경제재예요."},
+    {emoji:"💻",name:"노트북",cat:"scarcity",correct:"economic",context:"전자제품 매장에서 구매",exp:"노트북은 희소성이 있어 구매 비용이 드는 경제재예요."},
+    {emoji:"📱",name:"스마트폰",cat:"scarcity",correct:"economic",context:"통신사에서 구매",exp:"스마트폰은 희소성이 있는 경제재예요."},
+    {emoji:"🏠",name:"아파트",cat:"scarcity",correct:"economic",context:"부동산에서 거래",exp:"아파트는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"💊",name:"약",cat:"scarcity",correct:"economic",context:"약국에서 구매",exp:"약은 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"📚",name:"교과서",cat:"scarcity",correct:"economic",context:"학교에서 구매",exp:"교과서는 희소성이 있는 경제재예요."},
+    {emoji:"🚗",name:"자동차",cat:"scarcity",correct:"economic",context:"자동차 매장에서 구매",exp:"자동차는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"🍎",name:"사과",cat:"scarcity",correct:"economic",context:"마트에서 구매",exp:"사과는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"🎮",name:"게임기",cat:"scarcity",correct:"economic",context:"게임 매장에서 구매",exp:"게임기는 희소성이 있는 경제재예요."},
+    {emoji:"👟",name:"운동화",cat:"scarcity",correct:"economic",context:"신발 가게에서 구매",exp:"운동화는 희소성이 있는 경제재예요."},
+    {emoji:"🍕",name:"피자",cat:"scarcity",correct:"economic",context:"피자 가게에서 주문",exp:"피자는 대가를 지불해야 하는 경제재예요."},
+    {emoji:"🚲",name:"자전거",cat:"scarcity",correct:"economic",context:"자전거 가게에서 구매",exp:"자전거는 희소성이 있는 경제재예요."},
+    {emoji:"📷",name:"카메라",cat:"scarcity",correct:"economic",context:"카메라 매장에서 구매",exp:"카메라는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"🧃",name:"음료수",cat:"scarcity",correct:"economic",context:"편의점에서 구매",exp:"음료수는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"🎸",name:"기타",cat:"scarcity",correct:"economic",context:"악기 매장에서 구매",exp:"기타는 희소성이 있는 경제재예요."},
+    {emoji:"🛋️",name:"소파",cat:"scarcity",correct:"economic",context:"가구점에서 구매",exp:"소파는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"🧁",name:"케이크",cat:"scarcity",correct:"economic",context:"제과점에서 구매",exp:"케이크는 희소성이 있는 경제재예요."},
+    {emoji:"🩺",name:"혈압계",cat:"scarcity",correct:"economic",context:"의료기기 매장에서 구매",exp:"혈압계는 희소성이 있어 구매 비용이 드는 경제재예요."},
+    {emoji:"🪑",name:"의자",cat:"scarcity",correct:"economic",context:"가구점에서 구매",exp:"의자는 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"🎒",name:"가방",cat:"scarcity",correct:"economic",context:"문구점에서 구매",exp:"가방은 희소성이 있는 경제재예요."},
+    // ── 희소성 유무 (scarcity) — 자유재 10개 ──
+    {emoji:"☀️",name:"햇빛",cat:"scarcity",correct:"free",context:"창문으로 들어오는 것",exp:"햇빛은 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"💨",name:"바람",cat:"scarcity",correct:"free",context:"자연에서 부는 것",exp:"바람은 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"🌊",name:"바닷물",cat:"scarcity",correct:"free",context:"해변에 있는 것",exp:"바닷물은 풍부해 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"🌧️",name:"빗물",cat:"scarcity",correct:"free",context:"하늘에서 내리는 것",exp:"빗물은 자연에서 무상으로 주어지는 자유재예요."},
+    {emoji:"🌬️",name:"공기",cat:"scarcity",correct:"free",context:"숨쉬는 것",exp:"공기는 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"🌞",name:"태양열",cat:"scarcity",correct:"free",context:"지붕 위에 내리쬐는 것",exp:"자연 상태의 태양열은 대가 없이 얻는 자유재예요."},
+    {emoji:"🌨️",name:"눈(雪)",cat:"scarcity",correct:"free",context:"하늘에서 내리는 것",exp:"눈은 자연에서 무상으로 내리는 자유재예요."},
+    {emoji:"🌿",name:"야생 풀",cat:"scarcity",correct:"free",context:"들판에 자라는 것",exp:"야생 풀은 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"🌋",name:"지열",cat:"scarcity",correct:"free",context:"땅속에서 나오는 열",exp:"자연 상태의 지열은 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"🌊",name:"강물",cat:"scarcity",correct:"free",context:"강에 흐르는 물",exp:"강물은 자연에서 무상으로 흐르는 자유재예요."},
+    // ── 사용 목적 (usage) — 생산재 20개 ──
+    {emoji:"🌾",name:"밀가루",cat:"usage",correct:"production",context:"제빵 공장 원재료",exp:"공장에서 빵 생산에 쓰이는 밀가루는 생산재(원재료)예요."},
+    {emoji:"🔩",name:"철강",cat:"usage",correct:"production",context:"자동차 공장 원재료",exp:"철강은 자동차 생산에 쓰이는 생산재예요."},
+    {emoji:"🧵",name:"실",cat:"usage",correct:"production",context:"의류 공장 재료",exp:"실은 옷 제조에 쓰이는 생산재(원재료)예요."},
+    {emoji:"🪵",name:"목재",cat:"usage",correct:"production",context:"가구 공장 원재료",exp:"목재는 가구 제조에 쓰이는 생산재예요."},
+    {emoji:"⚙️",name:"공작기계",cat:"usage",correct:"production",context:"물건 만드는 데 사용",exp:"공작기계는 생산에 쓰이는 생산재(자본재)예요."},
+    {emoji:"🚜",name:"트랙터",cat:"usage",correct:"production",context:"농사에 사용",exp:"트랙터는 농업 생산에 쓰이는 생산재(자본재)예요."},
+    {emoji:"🛢️",name:"원유",cat:"usage",correct:"production",context:"정유 공장 원재료",exp:"원유는 석유 제품 생산에 쓰이는 생산재예요."},
+    {emoji:"🖨️",name:"산업용 프린터",cat:"usage",correct:"production",context:"공장에서 라벨 출력",exp:"공장용 프린터는 생산 과정에 사용되는 생산재예요."},
+    {emoji:"🧪",name:"화학 용매",cat:"usage",correct:"production",context:"화학 공장 원료",exp:"화학 용매는 제품 생산에 쓰이는 생산재(원재료)예요."},
+    {emoji:"🏗️",name:"건설 크레인",cat:"usage",correct:"production",context:"건물 공사 현장",exp:"건설 크레인은 건축 생산에 쓰이는 생산재(자본재)예요."},
+    {emoji:"🐄",name:"젖소",cat:"usage",correct:"production",context:"우유 생산 농장",exp:"우유 생산을 위한 젖소는 생산재(자본재)예요."},
+    {emoji:"🌱",name:"볍씨",cat:"usage",correct:"production",context:"논에 심는 씨앗",exp:"볍씨는 쌀 생산을 위한 생산재(원재료)예요."},
+    {emoji:"🔧",name:"공장용 렌치",cat:"usage",correct:"production",context:"기계 조립에 사용",exp:"공장용 공구는 생산에 사용되는 생산재(자본재)예요."},
+    {emoji:"🧲",name:"전동기",cat:"usage",correct:"production",context:"생산 라인에 설치",exp:"전동기는 공장 생산에 쓰이는 생산재(자본재)예요."},
+    {emoji:"🧶",name:"원사(原絲)",cat:"usage",correct:"production",context:"실 공장 원재료",exp:"원사는 실 생산에 쓰이는 생산재(원재료)예요."},
+    {emoji:"🌽",name:"옥수수",cat:"usage",correct:"production",context:"사료 공장 원재료",exp:"사료로 가공되는 옥수수는 생산재(원재료)예요."},
+    {emoji:"🧱",name:"시멘트",cat:"usage",correct:"production",context:"건축 공사 재료",exp:"시멘트는 건물 생산에 쓰이는 생산재(원재료)예요."},
+    {emoji:"💡",name:"산업용 조명",cat:"usage",correct:"production",context:"공장 내부 설비",exp:"공장용 조명 설비는 생산을 돕는 생산재(자본재)예요."},
+    {emoji:"🚢",name:"화물선",cat:"usage",correct:"production",context:"물류 운송에 사용",exp:"화물선은 물류 생산 과정에 쓰이는 생산재(자본재)예요."},
+    {emoji:"🔬",name:"현미경",cat:"usage",correct:"production",context:"연구소에서 연구용",exp:"연구용 현미경은 생산 활동에 쓰이는 생산재(자본재)예요."},
+    // ── 사용 목적 (usage) — 소비재 20개 ──
+    {emoji:"🌾",name:"밀가루",cat:"usage",correct:"consumption",context:"집에서 빵 만들 때",exp:"가정에서 빵을 직접 만들어 먹기 위한 밀가루는 소비재예요."},
+    {emoji:"🍕",name:"피자",cat:"usage",correct:"consumption",context:"직접 먹기 위한 것",exp:"피자는 개인의 욕망 충족을 위해 소비되는 소비재예요."},
+    {emoji:"🍎",name:"사과",cat:"usage",correct:"consumption",context:"직접 먹는 것",exp:"직접 먹기 위한 사과는 소비재예요."},
+    {emoji:"🧴",name:"샴푸",cat:"usage",correct:"consumption",context:"머리 감을 때",exp:"샴푸는 개인 생활에 소비되는 소비재예요."},
+    {emoji:"🍫",name:"초콜릿",cat:"usage",correct:"consumption",context:"간식으로 먹는 것",exp:"초콜릿은 개인 소비를 위한 소비재예요."},
+    {emoji:"🚗",name:"승용차",cat:"usage",correct:"consumption",context:"가족이 타는 차",exp:"개인 이동용 승용차는 소비재예요."},
+    {emoji:"📺",name:"TV",cat:"usage",correct:"consumption",context:"거실에서 보는 것",exp:"TV는 개인 여가를 위한 소비재예요."},
+    {emoji:"🏀",name:"농구공",cat:"usage",correct:"consumption",context:"체육 시간에 사용",exp:"농구공은 개인이 소비하는 소비재예요."},
+    {emoji:"👔",name:"와이셔츠",cat:"usage",correct:"consumption",context:"출근할 때 입는 것",exp:"와이셔츠는 개인이 착용하는 소비재예요."},
+    {emoji:"🎧",name:"이어폰",cat:"usage",correct:"consumption",context:"음악 들을 때",exp:"이어폰은 개인 여가에 쓰이는 소비재예요."},
+    {emoji:"🧻",name:"화장지",cat:"usage",correct:"consumption",context:"화장실에서 사용",exp:"화장지는 개인 생활에 소비되는 소비재예요."},
+    {emoji:"🍜",name:"라면",cat:"usage",correct:"consumption",context:"저녁에 끓여 먹는 것",exp:"라면은 직접 먹기 위한 소비재예요."},
+    {emoji:"🪥",name:"칫솔",cat:"usage",correct:"consumption",context:"이를 닦을 때",exp:"칫솔은 개인 위생을 위한 소비재예요."},
+    {emoji:"📓",name:"노트",cat:"usage",correct:"consumption",context:"수업 시간에 필기",exp:"개인이 필기용으로 쓰는 노트는 소비재예요."},
+    {emoji:"🧊",name:"얼음",cat:"usage",correct:"consumption",context:"음료에 넣어 마시는 것",exp:"음료에 넣기 위한 얼음은 소비재예요."},
+    {emoji:"🍚",name:"쌀",cat:"usage",correct:"consumption",context:"집에서 밥을 지을 때",exp:"가정에서 밥을 짓기 위한 쌀은 소비재예요."},
+    {emoji:"🛏️",name:"침대",cat:"usage",correct:"consumption",context:"집에서 잠을 잘 때",exp:"가정용 침대는 개인이 소비하는 소비재예요."},
+    {emoji:"💄",name:"립스틱",cat:"usage",correct:"consumption",context:"화장할 때 사용",exp:"립스틱은 개인이 소비하는 소비재예요."},
+    {emoji:"🧢",name:"모자",cat:"usage",correct:"consumption",context:"야외 활동 시 착용",exp:"모자는 개인이 착용하는 소비재예요."},
+    {emoji:"🥛",name:"우유",cat:"usage",correct:"consumption",context:"아침에 마시는 것",exp:"직접 마시기 위한 우유는 소비재예요."},
+    // ── 추가 20개 ──
+    {emoji:"🏡",name:"별장",cat:"scarcity",correct:"economic",context:"휴가용으로 구매",exp:"별장은 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"🧣",name:"목도리",cat:"scarcity",correct:"economic",context:"겨울 의류 매장에서 구매",exp:"목도리는 희소성이 있는 경제재예요."},
+    {emoji:"🎻",name:"바이올린",cat:"scarcity",correct:"economic",context:"악기 매장에서 구매",exp:"바이올린은 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"🧊",name:"냉장고",cat:"scarcity",correct:"economic",context:"가전제품 매장에서 구매",exp:"냉장고는 희소성이 있는 경제재예요."},
+    {emoji:"🎨",name:"물감",cat:"scarcity",correct:"economic",context:"미술 도구점에서 구매",exp:"물감은 희소성이 있어 대가를 지불해야 하는 경제재예요."},
+    {emoji:"🏋️",name:"아령",cat:"scarcity",correct:"economic",context:"스포츠 용품점에서 구매",exp:"아령은 희소성이 있는 경제재예요."},
+    {emoji:"🌬️",name:"자연 바람",cat:"scarcity",correct:"free",context:"부채질 없이 느끼는 것",exp:"자연 바람은 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"🏔️",name:"산의 경관",cat:"scarcity",correct:"free",context:"등산 중 눈으로 보는 것",exp:"산의 경관은 대가 없이 누릴 수 있는 자유재예요."},
+    {emoji:"🌊",name:"파도 소리",cat:"scarcity",correct:"free",context:"해변에서 듣는 것",exp:"파도 소리는 자연에서 무상으로 얻는 자유재예요."},
+    {emoji:"🌙",name:"달빛",cat:"scarcity",correct:"free",context:"밤하늘에서 비치는 것",exp:"달빛은 대가 없이 얻을 수 있는 자유재예요."},
+    {emoji:"🧲",name:"전자석",cat:"usage",correct:"production",context:"공장 조립 라인에 사용",exp:"공장에서 제품 조립에 쓰이는 전자석은 생산재(자본재)예요."},
+    {emoji:"🌿",name:"천연고무",cat:"usage",correct:"production",context:"타이어 공장 원재료",exp:"천연고무는 타이어 생산에 쓰이는 생산재(원재료)예요."},
+    {emoji:"🔭",name:"산업용 카메라",cat:"usage",correct:"production",context:"품질 검사 설비",exp:"품질 검사용 카메라는 생산에 쓰이는 생산재(자본재)예요."},
+    {emoji:"🧪",name:"비료",cat:"usage",correct:"production",context:"농경지에 뿌리는 것",exp:"농작물 생산을 위한 비료는 생산재(원재료)예요."},
+    {emoji:"🪚",name:"전기톱",cat:"usage",correct:"production",context:"목재 가공 공장에서 사용",exp:"목재 가공에 쓰이는 전기톱은 생산재(자본재)예요."},
+    {emoji:"🧴",name:"세제",cat:"usage",correct:"consumption",context:"설거지할 때 사용",exp:"가정에서 설거지에 쓰는 세제는 소비재예요."},
+    {emoji:"🪒",name:"면도기",cat:"usage",correct:"consumption",context:"세면 시 사용",exp:"개인 위생을 위한 면도기는 소비재예요."},
+    {emoji:"🍺",name:"맥주",cat:"usage",correct:"consumption",context:"식사 자리에서 마시는 것",exp:"개인이 마시기 위한 맥주는 소비재예요."},
+    {emoji:"🎒",name:"등산 배낭",cat:"usage",correct:"consumption",context:"여가 등산 시 메는 것",exp:"개인 여가에 쓰이는 등산 배낭은 소비재예요."},
+    {emoji:"🪞",name:"거울",cat:"usage",correct:"consumption",context:"집 화장실에 설치",exp:"가정용 거울은 개인이 소비하는 소비재예요."},
   ],
 
   pair: [
+    // ── 기존 22개 ──
     {a:{emoji:"🥤",name:"콜라"},b:{emoji:"🍋",name:"사이다"},rel:"대체재",exp:"콜라와 사이다는 같은 효용을 얻을 수 있어 서로 대신 쓸 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
     {a:{emoji:"⌨️",name:"키보드"},b:{emoji:"🖱️",name:"마우스"},rel:"보완재",exp:"키보드와 마우스는 함께 사용할 때 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
     {a:{emoji:"🍜",name:"라면"},b:{emoji:"🧴",name:"샴푸"},rel:"독립재",exp:"라면과 샴푸는 서로 아무런 관련이 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
-    {a:{emoji:"✏️",name:"연필"},b:{emoji:"🖊️",name:"볼펜"},rel:"대체재",exp:"연필과 볼펜은 같은 용도로 서로 대신 사용할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
-    {a:{emoji:"🎿",name:"스키"},b:{emoji:"👖",name:"스키복"},rel:"보완재",exp:"스키와 스키복은 함께 사용해야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"✏️",name:"연필"},b:{emoji:"🖊️",name:"볼펜"},rel:"대체재",exp:"연필과 볼펜은 같은 용도로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🎿",name:"스키"},b:{emoji:"🧥",name:"스키복"},rel:"보완재",exp:"스키와 스키복은 함께 사용해야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
     {a:{emoji:"☕",name:"커피"},b:{emoji:"🍵",name:"녹차"},rel:"대체재",exp:"커피와 녹차는 따뜻한 음료로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
-    {a:{emoji:"🖨️",name:"프린터"},b:{emoji:"📄",name:"프린터 잉크"},rel:"결합재",exp:"프린터와 잉크는 함께 쓰지 않으면 의미 없는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🖨️",name:"프린터"},b:{emoji:"🖊️",name:"프린터 잉크"},rel:"결합재",exp:"프린터와 잉크는 함께 쓰지 않으면 의미 없는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
     {a:{emoji:"🚌",name:"버스"},b:{emoji:"🚇",name:"지하철"},rel:"대체재",exp:"버스와 지하철은 이동 수단으로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
     {a:{emoji:"📖",name:"책"},b:{emoji:"☂️",name:"우산"},rel:"독립재",exp:"책과 우산은 서로 전혀 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
     {a:{emoji:"🍞",name:"빵"},b:{emoji:"🧈",name:"버터"},rel:"보완재",exp:"빵과 버터는 함께 먹을 때 더 큰 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
-    {a:{emoji:"🖥️",name:"모니터"},b:{emoji:"💻",name:"컴퓨터 본체"},rel:"결합재",exp:"모니터와 컴퓨터 본체는 함께 써야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🖥️",name:"모니터"},b:{emoji:"💾",name:"컴퓨터 본체"},rel:"결합재",exp:"모니터와 컴퓨터 본체는 함께 써야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
     {a:{emoji:"🍚",name:"쌀"},b:{emoji:"🍝",name:"파스타"},rel:"대체재",exp:"쌀과 파스타는 주식으로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
     {a:{emoji:"🎸",name:"기타"},b:{emoji:"🎵",name:"기타 줄"},rel:"결합재",exp:"기타와 기타 줄은 함께 사용해야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
     {a:{emoji:"🍦",name:"아이스크림"},b:{emoji:"🌂",name:"우산"},rel:"독립재",exp:"아이스크림과 우산은 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
-    {a:{emoji:"🏃",name:"운동화"},b:{emoji:"🧦",name:"양말"},rel:"보완재",exp:"운동화와 양말은 함께 착용해야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"👟",name:"운동화"},b:{emoji:"🧦",name:"양말"},rel:"보완재",exp:"운동화와 양말은 함께 착용해야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
     {a:{emoji:"📷",name:"카메라"},b:{emoji:"🔋",name:"배터리"},rel:"결합재",exp:"카메라와 배터리는 함께 써야 작동하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
     {a:{emoji:"🚲",name:"자전거"},b:{emoji:"🛵",name:"오토바이"},rel:"대체재",exp:"자전거와 오토바이는 이동 수단으로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
     {a:{emoji:"🍕",name:"피자"},b:{emoji:"🧃",name:"음료수"},rel:"보완재",exp:"피자와 음료수는 함께 먹을 때 더 큰 만족을 주는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
     {a:{emoji:"🏠",name:"집"},b:{emoji:"🌵",name:"선인장"},rel:"독립재",exp:"집과 선인장은 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
     {a:{emoji:"📱",name:"스마트폰"},b:{emoji:"🔌",name:"충전기"},rel:"결합재",exp:"스마트폰과 충전기는 함께 사용해야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🍔",name:"햄버거"},b:{emoji:"🌭",name:"핫도그"},rel:"대체재",exp:"햄버거와 핫도그는 간식으로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🎺",name:"트럼펫"},b:{emoji:"🎸",name:"기타"},rel:"독립재",exp:"트럼펫과 기타는 함께 사용할 필요가 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    // ── 추가 20개 ──
+    {a:{emoji:"🚕",name:"택시"},b:{emoji:"🚌",name:"버스"},rel:"대체재",exp:"택시와 버스는 이동 수단으로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🍚",name:"밥"},b:{emoji:"🥢",name:"젓가락"},rel:"보완재",exp:"밥과 젓가락은 함께 사용해야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🐟",name:"생선"},b:{emoji:"🌂",name:"우산"},rel:"독립재",exp:"생선과 우산은 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🧲",name:"면도기"},b:{emoji:"🧴",name:"면도 크림"},rel:"보완재",exp:"면도기와 면도 크림은 함께 써야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🎮",name:"게임기"},b:{emoji:"💿",name:"게임 CD"},rel:"결합재",exp:"게임기와 게임 CD는 함께 써야 의미 있는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🍺",name:"맥주"},b:{emoji:"🥂",name:"와인"},rel:"대체재",exp:"맥주와 와인은 주류로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"💡",name:"전구"},b:{emoji:"🔌",name:"전기 소켓"},rel:"결합재",exp:"전구와 소켓은 함께 써야 작동하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🎻",name:"바이올린"},b:{emoji:"🥁",name:"드럼"},rel:"독립재",exp:"바이올린과 드럼은 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🧃",name:"오렌지주스"},b:{emoji:"🧃",name:"포도주스"},rel:"대체재",exp:"오렌지주스와 포도주스는 음료로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🎣",name:"낚싯대"},b:{emoji:"🪝",name:"낚싯바늘"},rel:"결합재",exp:"낚싯대와 낚싯바늘은 함께 써야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"☂️",name:"우산"},b:{emoji:"🧥",name:"비옷"},rel:"대체재",exp:"우산과 비옷은 비를 막기 위해 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🍜",name:"라면"},b:{emoji:"🥚",name:"달걀"},rel:"보완재",exp:"라면과 달걀은 함께 먹을 때 더 큰 만족을 주는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"📚",name:"소설책"},b:{emoji:"🪴",name:"화분"},rel:"독립재",exp:"소설책과 화분은 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🚀",name:"로켓"},b:{emoji:"⛽",name:"연료"},rel:"결합재",exp:"로켓과 연료는 함께 써야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🍰",name:"케이크"},b:{emoji:"🎂",name:"파이"},rel:"대체재",exp:"케이크와 파이는 후식으로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🖊️",name:"펜"},b:{emoji:"📓",name:"노트"},rel:"보완재",exp:"펜과 노트는 함께 써야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🐕",name:"강아지"},b:{emoji:"🚁",name:"헬리콥터"},rel:"독립재",exp:"강아지와 헬리콥터는 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🏓",name:"탁구채"},b:{emoji:"🏓",name:"탁구공"},rel:"결합재",exp:"탁구채와 탁구공은 함께 써야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🚗",name:"승용차"},b:{emoji:"🚙",name:"SUV"},rel:"대체재",exp:"승용차와 SUV는 이동 수단으로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🍿",name:"팝콘"},b:{emoji:"🎬",name:"영화 관람"},rel:"보완재",exp:"팝콘과 영화 관람은 함께할 때 더 큰 만족을 주는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    // ── 추가 20개 ──
+    {a:{emoji:"🧃",name:"우유"},b:{emoji:"🧁",name:"케이크"},rel:"보완재",exp:"우유와 케이크는 함께 먹을 때 더 큰 만족을 주는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🚗",name:"자동차"},b:{emoji:"⛽",name:"휘발유"},rel:"결합재",exp:"자동차와 휘발유는 함께 써야만 의미 있는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🍜",name:"우동"},b:{emoji:"🍝",name:"스파게티"},rel:"대체재",exp:"우동과 스파게티는 면 요리로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🔦",name:"손전등"},b:{emoji:"🪫",name:"건전지"},rel:"결합재",exp:"손전등과 건전지는 함께 써야 작동하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🥗",name:"샐러드"},b:{emoji:"🌮",name:"타코"},rel:"독립재",exp:"샐러드와 타코는 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"📻",name:"라디오"},b:{emoji:"📺",name:"TV"},rel:"대체재",exp:"라디오와 TV는 미디어 기기로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🎮",name:"게임 패드"},b:{emoji:"🎮",name:"게임 콘솔"},rel:"결합재",exp:"게임 패드와 콘솔은 함께 써야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🧦",name:"장갑"},b:{emoji:"🎵",name:"음악"},rel:"독립재",exp:"장갑과 음악은 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🍵",name:"홍차"},b:{emoji:"☕",name:"커피믹스"},rel:"대체재",exp:"홍차와 커피믹스는 따뜻한 음료로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🎾",name:"테니스 라켓"},b:{emoji:"🎾",name:"테니스 공"},rel:"결합재",exp:"테니스 라켓과 공은 함께 써야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🥐",name:"크루아상"},b:{emoji:"🍞",name:"식빵"},rel:"대체재",exp:"크루아상과 식빵은 빵류로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🖼️",name:"그림액자"},b:{emoji:"🐟",name:"생선"},rel:"독립재",exp:"그림액자와 생선은 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🏸",name:"배드민턴 라켓"},b:{emoji:"🏸",name:"셔틀콕"},rel:"결합재",exp:"배드민턴 라켓과 셔틀콕은 함께 써야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🚝",name:"고속철도"},b:{emoji:"🚌",name:"고속버스"},rel:"대체재",exp:"고속철도와 고속버스는 장거리 이동 수단으로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🍛",name:"카레"},b:{emoji:"🍚",name:"밥"},rel:"보완재",exp:"카레와 밥은 함께 먹어야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🌵",name:"선인장"},b:{emoji:"🐠",name:"열대어"},rel:"독립재",exp:"선인장과 열대어는 서로 아무 관련 없는 독립재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🔑",name:"열쇠"},b:{emoji:"🔒",name:"자물쇠"},rel:"결합재",exp:"열쇠와 자물쇠는 함께 써야 하는 결합재예요.",choices:["대체재","보완재","결합재","독립재"]},
+    {a:{emoji:"🍊",name:"오렌지"},b:{emoji:"🍋",name:"레몬"},rel:"대체재",exp:"오렌지와 레몬은 과일로 서로 대신할 수 있는 대체재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🎙️",name:"마이크"},b:{emoji:"🔊",name:"스피커"},rel:"보완재",exp:"마이크와 스피커는 함께 사용할 때 더 큰 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
+    {a:{emoji:"🥾",name:"등산화"},b:{emoji:"🗺️",name:"지도"},rel:"보완재",exp:"등산화와 지도는 등산 시 함께 써야 효용을 얻는 보완재예요.",choices:["대체재","보완재","독립재","결합재"]},
   ],
 
   swipe: [
+    // ── 기존 24개 ──
     {emoji:"👨‍🏫",name:"교사의 수업",isService:true,serviceType:"직접 용역",exp:"교사의 수업은 형태 없이 직접 제공하는 직접 용역이에요."},
     {emoji:"👟",name:"운동화",isService:false,exp:"운동화는 형태가 있는 재화예요."},
     {emoji:"🏥",name:"의사의 진료",isService:true,serviceType:"직접 용역",exp:"의사의 진료는 매개체 없이 직접 제공되는 직접 용역이에요."},
@@ -408,206 +546,208 @@ const DB = {
     {emoji:"🧑‍🍳",name:"요리사 서비스",isService:true,serviceType:"직접 용역",exp:"요리사가 직접 음식을 만들어 주는 것은 직접 용역이에요."},
     {emoji:"📦",name:"택배 박스",isService:false,exp:"택배 박스 자체는 형태가 있는 재화예요."},
     {emoji:"🚁",name:"헬기 응급이송",isService:true,serviceType:"간접 용역",exp:"헬기(매개체)를 통한 응급이송 서비스는 간접 용역이에요."},
+    // ── 추가 20개 ──
+    {emoji:"🎤",name:"가수의 공연",isService:true,serviceType:"직접 용역",exp:"가수의 공연은 직접 제공되는 직접 용역이에요."},
+    {emoji:"📱",name:"스마트폰",isService:false,exp:"스마트폰은 형태가 있는 재화예요."},
+    {emoji:"🧹",name:"청소 대행 서비스",isService:true,serviceType:"직접 용역",exp:"청소부가 직접 제공하는 청소 서비스는 직접 용역이에요."},
+    {emoji:"🍎",name:"사과",isService:false,exp:"사과는 형태가 있는 재화예요."},
+    {emoji:"🚌",name:"시내버스 탑승",isService:true,serviceType:"간접 용역",exp:"버스(매개체)를 통해 제공되는 이동 서비스는 간접 용역이에요."},
+    {emoji:"🛋️",name:"소파",isService:false,exp:"소파는 형태가 있는 내구 소비재예요."},
+    {emoji:"👨‍💻",name:"컴퓨터 수리",isService:true,serviceType:"직접 용역",exp:"기술자가 직접 제공하는 컴퓨터 수리는 직접 용역이에요."},
+    {emoji:"🧃",name:"음료수",isService:false,exp:"음료수는 형태가 있는 재화예요."},
+    {emoji:"🚢",name:"유람선 탑승",isService:true,serviceType:"간접 용역",exp:"유람선(매개체)을 통해 제공되는 여행 서비스는 간접 용역이에요."},
+    {emoji:"💊",name:"약",isService:false,exp:"약은 형태가 있는 재화예요."},
+    {emoji:"🧑‍🏫",name:"과외 수업",isService:true,serviceType:"직접 용역",exp:"교사가 직접 지식을 전달하는 과외는 직접 용역이에요."},
+    {emoji:"🪑",name:"의자",isService:false,exp:"의자는 형태가 있는 재화예요."},
+    {emoji:"📡",name:"케이블TV 서비스",isService:true,serviceType:"간접 용역",exp:"케이블(매개체)을 통해 제공되는 방송 서비스는 간접 용역이에요."},
+    {emoji:"🎸",name:"기타",isService:false,exp:"기타는 형태가 있는 재화예요."},
+    {emoji:"💆",name:"마사지 서비스",isService:true,serviceType:"직접 용역",exp:"마사지사가 직접 제공하는 마사지는 직접 용역이에요."},
+    {emoji:"🧢",name:"모자",isService:false,exp:"모자는 형태가 있는 재화예요."},
+    {emoji:"🚐",name:"통학버스 운행",isService:true,serviceType:"간접 용역",exp:"버스(매개체)를 이용한 통학 서비스는 간접 용역이에요."},
+    {emoji:"🍫",name:"초콜릿",isService:false,exp:"초콜릿은 형태가 있는 재화예요."},
+    {emoji:"🧑‍⚕️",name:"물리치료사 치료",isService:true,serviceType:"직접 용역",exp:"물리치료사가 직접 제공하는 치료는 직접 용역이에요."},
+    {emoji:"🪴",name:"화분",isService:false,exp:"화분은 형태가 있는 재화예요."},
+    // ── 추가 20개 ──
+    {emoji:"🧑‍🔧",name:"전기 수리 서비스",isService:true,serviceType:"직접 용역",exp:"전기 기사가 직접 제공하는 수리 서비스는 직접 용역이에요."},
+    {emoji:"🪣",name:"양동이",isService:false,exp:"양동이는 형태가 있는 재화예요."},
+    {emoji:"🚑",name:"구급차 이송",isService:true,serviceType:"간접 용역",exp:"구급차(매개체)를 통해 환자를 이송하는 서비스는 간접 용역이에요."},
+    {emoji:"🛒",name:"카트",isService:false,exp:"카트는 형태가 있는 재화예요."},
+    {emoji:"👩‍🎨",name:"그림 강습",isService:true,serviceType:"직접 용역",exp:"화가가 직접 지도하는 그림 강습은 직접 용역이에요."},
+    {emoji:"🧸",name:"인형",isService:false,exp:"인형은 형태가 있는 재화예요."},
+    {emoji:"🚤",name:"유람선 관광",isService:true,serviceType:"간접 용역",exp:"유람선(매개체)을 이용한 관광 서비스는 간접 용역이에요."},
+    {emoji:"🎯",name:"다트판",isService:false,exp:"다트판은 형태가 있는 재화예요."},
+    {emoji:"🧑‍💼",name:"법률 상담",isService:true,serviceType:"직접 용역",exp:"변호사가 직접 제공하는 법률 상담은 직접 용역이에요."},
+    {emoji:"🌡️",name:"체온계",isService:false,exp:"체온계는 형태가 있는 재화예요."},
+    {emoji:"🚠",name:"케이블카 탑승",isService:true,serviceType:"간접 용역",exp:"케이블카(매개체)를 통해 제공되는 이동 서비스는 간접 용역이에요."},
+    {emoji:"🎁",name:"선물 상자",isService:false,exp:"선물 상자는 형태가 있는 재화예요."},
+    {emoji:"🧑‍🎤",name:"음악 레슨",isService:true,serviceType:"직접 용역",exp:"음악 강사가 직접 지도하는 레슨은 직접 용역이에요."},
+    {emoji:"🪟",name:"창문",isService:false,exp:"창문은 형태가 있는 재화예요."},
+    {emoji:"🛳️",name:"여객선 탑승",isService:true,serviceType:"간접 용역",exp:"여객선(매개체)을 이용한 이동 서비스는 간접 용역이에요."},
+    {emoji:"🥄",name:"숟가락",isService:false,exp:"숟가락은 형태가 있는 재화예요."},
+    {emoji:"🧑‍🚒",name:"소방 구조 활동",isService:true,serviceType:"직접 용역",exp:"소방관이 직접 제공하는 구조 활동은 직접 용역이에요."},
+    {emoji:"🪆",name:"장식품",isService:false,exp:"장식품은 형태가 있는 재화예요."},
+    {emoji:"🛺",name:"관광 인력거",isService:true,serviceType:"간접 용역",exp:"인력거(매개체)를 통해 제공되는 관광 서비스는 간접 용역이에요."},
+    {emoji:"🎠",name:"회전목마 이용권",isService:true,serviceType:"직접 용역",exp:"회전목마 탑승 서비스는 직접 제공되는 직접 용역이에요."},
   ]
 };
 
-// 문제 수 설정 (각 게임당 출제 수)
-const Q_COUNT = { shelf: 10, pair: 10, swipe: 10 };
-
-// ════════════════════════════════════════
-//  유틸리티
-// ════════════════════════════════════════
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function pickRandom(arr, n) {
-  return shuffle(arr).slice(0, Math.min(n, arr.length));
-}
-
-// ════════════════════════════════════════
-//  STATE
-// ════════════════════════════════════════
-let state = {
-  nickname: '', isReturning: false,
-  stageOrder: [0,1,2], currentStage: 0,
-  score: 0, combo: 0, maxCombo: 0,
-  correctCount: 0, totalCount: 0,
-  stageScores: [0,0,0],
-  // 셔플된 문제 세트 (게임 시작 시 결정)
-  questions: { shelf: [], pair: [], swipe: [] },
-  qIdx: { shelf: 0, pair: 0, swipe: 0 },
+// shelf 선반 메타 (cat별 2개만 표시)
+const SHELF_META = {
+  scarcity: [
+    {id:"economic",label:"경제재",icon:"💰",color:"#FFB997",desc:"희소성 있음 (대가 지불)"},
+    {id:"free",    label:"자유재",icon:"🌬️",color:"#7CC4F0",desc:"희소성 없음 (무상 획득)"},
+  ],
+  usage: [
+    {id:"production", label:"생산재",icon:"🏭",color:"#6ECFB5",desc:"생산 과정에 사용"},
+    {id:"consumption",label:"소비재",icon:"🛒",color:"#C4A8FF",desc:"직접 소비에 사용"},
+  ]
 };
 
-function buildQuestionSets() {
-  state.questions.shelf = pickRandom(DB.shelf, Q_COUNT.shelf);
-  state.questions.pair  = pickRandom(DB.pair,  Q_COUNT.pair);
-  state.questions.swipe = pickRandom(DB.swipe, Q_COUNT.swipe);
-  state.qIdx = { shelf: 0, pair: 0, swipe: 0 };
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+let state = {
+  nickname:'',
+  stageOrder:[0,1,2], currentStage:0,
+  score:0, combo:0, maxCombo:0,
+  correctCount:0, totalCount:0,
+  stageScores:[0,0,0],
+  questions:{shelf:[],pair:[],swipe:[]},
+  qIdx:{shelf:0,pair:0,swipe:0},
+  // 타임어택
+  timerInterval:null, timerLeft:60,
+  introRankCache:{},
+  currentGameIdx:0,
+};
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function pickRandom(arr,n){return shuffle(arr).slice(0,Math.min(n,arr.length))}
+
+function buildQuestionSets(){
+  state.questions.shelf = shuffle(DB.shelf);
+  state.questions.pair  = pickRandom(DB.pair, Q_COUNT.pair); // 12문제 고정
+  state.questions.swipe = shuffle(DB.swipe);
+  state.qIdx = {shelf:0, pair:0, swipe:0};
 }
 
-// ════════════════════════════════════════
-//  API (구글 앱스크립트 연동)
-// ════════════════════════════════════════
-async function apiGet(params) {
-  if (!IS_CONFIGURED) return null;
-  try {
-    const qs = new URLSearchParams(params).toString();
-    const res = await fetch(`${SCRIPT_URL}?${qs}`);
-    return await res.json();
-  } catch(e) { return null; }
+// ══════════════════════════════════════
+//  API
+// ══════════════════════════════════════
+const GAME_KEYS = ['shelf','pair','swipe'];
+
+async function apiGet(params){
+  if(!IS_CONFIGURED) return null;
+  try{const r=await fetch(`${SCRIPT_URL}?${new URLSearchParams(params)}`);return await r.json();}
+  catch(e){return null;}
+}
+async function apiPost(body){
+  if(!IS_CONFIGURED) return null;
+  try{const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(body)});return await r.json();}
+  catch(e){return null;}
 }
 
-async function apiPost(body) {
-  if (!IS_CONFIGURED) return null;
-  try {
-    const res = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(body)
-    });
-    return await res.json();
-  } catch(e) { return null; }
-}
+// ══════════════════════════════════════
+//  UI HELPERS
+// ══════════════════════════════════════
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showLoading(m=''){document.getElementById('loadingText').textContent=m||'불러오는 중…';document.getElementById('loadingOverlay').style.display='flex'}
+function hideLoading(){document.getElementById('loadingOverlay').style.display='none'}
+function showToast(m,ms=2000){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),ms)}
+function setMsg(t,c){const el=document.getElementById('inputMsg');el.textContent=t;el.style.color=c}
 
-// ════════════════════════════════════════
-//  UI 헬퍼
-// ════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-function showToast(msg, ms = 2000) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), ms);
-}
-
-function showLoading(msg = '불러오는 중…') {
-  document.getElementById('loadingText').textContent = msg;
-  document.getElementById('loadingOverlay').style.display = 'flex';
-}
-function hideLoading() { document.getElementById('loadingOverlay').style.display = 'none'; }
-
-function spawnConfetti() {
-  const colors = ['#FFB997','#6ECFB5','#FFE566','#C4A8FF','#7CC4F0','#FF7B5C'];
-  for (let i = 0; i < 40; i++) {
-    const c = document.createElement('div');
-    c.className = 'confetti-piece';
-    c.style.cssText = `left:${Math.random()*100}%;top:-10px;background:${colors[~~(Math.random()*colors.length)]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;animation-delay:${Math.random()}s;animation-duration:${2+Math.random()*1.5}s;border-radius:${Math.random()>.5?'50%':'2px'}`;
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 3500);
+function spawnConfetti(){
+  const cols=['#FFB997','#6ECFB5','#FFE566','#C4A8FF','#7CC4F0','#FF7B5C'];
+  for(let i=0;i<40;i++){
+    const c=document.createElement('div');c.className='confetti-piece';
+    c.style.cssText=`left:${Math.random()*100}%;top:-10px;background:${cols[~~(Math.random()*cols.length)]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;animation-delay:${Math.random()}s;animation-duration:${2+Math.random()*1.5}s;border-radius:${Math.random()>.5?'50%':'2px'}`;
+    document.body.appendChild(c);setTimeout(()=>c.remove(),3500);
   }
 }
 
-function updateHeader() {
-  const names  = ['선반 정리','짝꿍 찾기','용역 레이더'];
-  const colors = ['var(--coral)','var(--sky-dark)','var(--lavender-dark)'];
-  const g = state.stageOrder[state.currentStage];
-  const lbl = document.getElementById('stageLbl');
-  lbl.textContent = `Stage ${state.currentStage+1}: ${names[g]}`;
-  lbl.style.background = colors[g];
-  document.getElementById('scoreDisp').textContent = `${state.score}점`;
-  const cd = document.getElementById('comboDisp');
-  cd.textContent = state.combo >= 2 ? `🔥 ${state.combo}콤보` : '';
+function updateHeader(){
+  const names=['선반 정리','짝꿍 찾기','용역 레이더'];
+  const colors=['var(--coral)','var(--sky-dark)','var(--lavender-dark)'];
+  const g=state.stageOrder[state.currentStage];
+  const lbl=document.getElementById('stageLbl');
+  lbl.textContent=`Stage ${state.currentStage+1}: ${names[g]}`;
+  lbl.style.background=colors[g];
+  document.getElementById('scoreDisp').textContent=`${state.score}점`;
+  const cd=document.getElementById('comboDisp');
+  cd.textContent=state.combo>=2?`🔥 ${state.combo}콤보`:'';
 }
 
-function updateProgress(cur, total) {
-  document.getElementById('progFill').style.width = `${(cur/total)*100}%`;
+function updateProgress(cur,total){
+  document.getElementById('progFill').style.width=`${total>0?(cur/total)*100:0}%`;
 }
 
-function makeDots(total, cur, doneColor = 'var(--mint)') {
-  return Array.from({length: total}, (_,i) => {
-    if (i < cur)  return `<div class="q-dot done" style="background:${doneColor}"></div>`;
-    if (i === cur) return `<div class="q-dot curr"></div>`;
+function makeDots(total,cur,doneColor='var(--mint)'){
+  return Array.from({length:total},(_,i)=>{
+    if(i<cur) return `<div class="q-dot done" style="background:${doneColor}"></div>`;
+    if(i===cur) return `<div class="q-dot curr"></div>`;
     return `<div class="q-dot"></div>`;
   }).join('');
 }
 
-function addScore(base) {
+function addScore(base){
   state.combo++;
-  if (state.combo > state.maxCombo) state.maxCombo = state.combo;
-  const mult = state.combo >= 3 ? 1.5 : 1;
-  const pts  = Math.round(base * mult);
-  state.score += pts;
+  if(state.combo>state.maxCombo) state.maxCombo=state.combo;
+  const mult=state.combo>=3?1.5:1;
+  const pts=Math.round(base*mult);
+  state.score+=pts;
   state.correctCount++;
-  state.stageScores[state.currentStage] += pts;
+  state.stageScores[state.currentStage]+=pts;
   updateHeader();
   return pts;
 }
 
-// ════════════════════════════════════════
-//  FEEDBACK POPUP
-// ════════════════════════════════════════
-function showFeedback(correct, points, exp) {
-  const popup   = document.getElementById('fbPopup');
-  const overlay = document.getElementById('fbOverlay');
-  document.getElementById('fbBig').textContent    = correct ? '✅' : '❌';
-  document.getElementById('fbResult').textContent = correct ? '정답!' : '아쉽!';
-  document.getElementById('fbResult').className   = 'fb-result ' + (correct ? 'ok' : 'ng');
-  document.getElementById('fbPts').textContent    = correct ? `+${points}점${state.combo>=3?' (콤보 ×1.5!)':''}` : '해설을 확인하세요';
-  document.getElementById('fbExp').textContent    = exp;
-  popup.className   = 'fb-popup show ' + (correct ? 'correct-fb' : 'wrong-fb');
+// ══════════════════════════════════════
+//  FEEDBACK
+// ══════════════════════════════════════
+function showFeedback(correct, points, exp, onDismiss){
+  const popup=document.getElementById('fbPopup');
+  const overlay=document.getElementById('fbOverlay');
+  document.getElementById('fbBig').textContent     = correct?'✅':'❌';
+  document.getElementById('fbResult').textContent  = correct?'정답!':'아쉽!';
+  document.getElementById('fbResult').className    = 'fb-result '+(correct?'ok':'ng');
+  document.getElementById('fbPts').textContent     = correct?`+${points}점${state.combo>=3?' (콤보 ×1.5!)':''}`:'해설을 확인하세요';
+  document.getElementById('fbExp').textContent     = exp;
+  popup.className  = 'fb-popup show '+(correct?'correct-fb':'wrong-fb');
   overlay.classList.add('show');
 
-  let done = false;
-  const dismiss = () => {
-    if (done) return; done = true;
+  let done=false;
+  const dismiss=()=>{
+    if(done) return; done=true;
     clearTimeout(timer);
     popup.classList.remove('show');
     overlay.classList.remove('show');
-    overlay.removeEventListener('click', dismiss);
-    popup.removeEventListener('click', dismiss);
-    setTimeout(() => nextQuestion(), 80);
+    overlay.removeEventListener('click',dismiss);
+    popup.removeEventListener('click',dismiss);
+    if(onDismiss) onDismiss();
   };
-  const timer = setTimeout(dismiss, correct ? 1600 : 3500);
-  setTimeout(() => {
-    overlay.addEventListener('click', dismiss);
-    popup.addEventListener('click', dismiss);
-  }, 350);
+  const timer=setTimeout(dismiss, correct?1400:3200);
+  setTimeout(()=>{overlay.addEventListener('click',dismiss);popup.addEventListener('click',dismiss);},300);
 }
 
-// ════════════════════════════════════════
-//  INTRO
-// ════════════════════════════════════════
-const nicknameInput = document.getElementById('nicknameInput');
-const btnStart      = document.getElementById('btnStart');
+// ══════════════════════════════════════
+//  INTRO RANKING (게임별 탭)
+// ══════════════════════════════════════
+let introTabActive=0;
+const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
 
-nicknameInput.addEventListener('input', () => {
-  btnStart.disabled = nicknameInput.value.trim().length < 1;
-  setMsg('최대 10자 · 한글/영문/숫자 가능', 'var(--text-light)');
-});
-
-function setMsg(text, color) {
-  const el = document.getElementById('inputMsg');
-  el.textContent = text; el.style.color = color;
+function switchIntroTab(idx){
+  introTabActive=idx;
+  document.querySelectorAll('.rank-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector(`.rank-tab[data-game="${idx}"]`).classList.add('active');
+  renderIntroRankBody(idx);
 }
 
-async function loadIntroRanking() {
-  if (!IS_CONFIGURED) {
-    document.getElementById('setupNotice').style.display = 'block';
-    document.getElementById('miniRankList').innerHTML =
-      '<p style="font-size:12px;color:var(--text-light);text-align:center">앱스크립트 연동 후 랭킹이 표시됩니다</p>';
-    return;
-  }
-  const data = await apiGet({ action: 'getRankings' });
-  renderMiniRanking(data ? data.rankings : []);
-}
-
-function renderMiniRanking(rankings) {
-  const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
-  const list = document.getElementById('miniRankList');
-  if (!rankings || !rankings.length) {
-    list.innerHTML = '<p style="font-size:12px;color:var(--text-light);text-align:center">아직 플레이한 사람이 없어요!</p>';
-    return;
-  }
-  list.innerHTML = rankings.slice(0,5).map((r,i) => `
+function renderIntroRankBody(idx){
+  const body=document.getElementById('introRankBody');
+  const key=GAME_KEYS[idx];
+  const data=state.introRankCache[key];
+  if(!data){body.innerHTML='<p style="font-size:12px;color:var(--text-light);text-align:center">불러오는 중…</p>';return;}
+  if(!data.length){body.innerHTML='<p style="font-size:12px;color:var(--text-light);text-align:center">아직 기록이 없어요!</p>';return;}
+  body.innerHTML=data.slice(0,5).map((r,i)=>`
     <div class="mini-rank-item">
       <span class="mini-rank-num">${medals[i]||`${i+1}`}</span>
       <span class="mini-rank-name">${r.name}</span>
@@ -615,93 +755,130 @@ function renderMiniRanking(rankings) {
     </div>`).join('');
 }
 
-async function startGame() {
-  const name = nicknameInput.value.trim();
-  if (!name) return;
-  btnStart.disabled = true;
+async function loadIntroRanking(){
+  if(!IS_CONFIGURED){
+    document.getElementById('introRankBody').innerHTML='<p style="font-size:12px;color:var(--text-light);text-align:center">앱스크립트 연동 후 랭킹이 표시됩니다</p>';
+    return;
+  }
+  // 3개 게임 랭킹 병렬 로드
+  const [r0,r1,r2]=await Promise.all([
+    apiGet({action:'getRankings',game:'shelf'}),
+    apiGet({action:'getRankings',game:'pair'}),
+    apiGet({action:'getRankings',game:'swipe'}),
+  ]);
+  state.introRankCache.shelf = r0?r0.rankings:[];
+  state.introRankCache.pair  = r1?r1.rankings:[];
+  state.introRankCache.swipe = r2?r2.rankings:[];
+  renderIntroRankBody(introTabActive);
+}
 
-  if (IS_CONFIGURED) {
+// ══════════════════════════════════════
+//  NICKNAME / START
+// ══════════════════════════════════════
+const nicknameInput=document.getElementById('nicknameInput');
+const btnStart=document.getElementById('btnStart');
+nicknameInput.addEventListener('input',()=>{
+  btnStart.disabled=nicknameInput.value.trim().length<1;
+  setMsg('최대 10자 · 한글/영문/숫자 가능','var(--text-light)');
+});
+
+async function startGame(){
+  const name=nicknameInput.value.trim();
+  if(!name) return;
+  btnStart.disabled=true;
+  if(IS_CONFIGURED){
     showLoading('닉네임 확인 중…');
-    const res = await apiGet({ action: 'checkNickname', nickname: name });
+    const res=await apiGet({action:'checkNickname',nickname:name});
     hideLoading();
-    if (res && res.exists) {
-      const prev = res.prevScore;
-      setMsg(prev != null
-        ? `👋 돌아왔군요! 이전 최고 기록: ${Number(prev).toLocaleString()}점`
-        : `👋 돌아왔군요! 이번엔 더 높은 점수 도전!`, 'var(--mint-dark)');
-      await new Promise(r => setTimeout(r, 1800));
+    if(res&&res.exists){
+      setMsg(res.prevScore!=null
+        ?`👋 돌아왔군요! 최고 기록: ${Number(res.prevScore).toLocaleString()}점`
+        :`👋 돌아왔군요! 이번엔 더 높은 점수 도전!`,'var(--mint-dark)');
+      await new Promise(r=>setTimeout(r,1800));
     } else {
-      await apiPost({ action: 'registerName', nickname: name });
+      await apiPost({action:'registerName',nickname:name});
     }
   }
-
-  state.nickname = name;
-  document.getElementById('tutNickname').textContent = name;
-  setMsg('최대 10자 · 한글/영문/숫자 가능', 'var(--text-light)');
-  btnStart.disabled = false;
+  state.nickname=name;
+  document.getElementById('tutNickname').textContent=name;
+  setMsg('최대 10자 · 한글/영문/숫자 가능','var(--text-light)');
+  btnStart.disabled=false;
   showScreen('screen-tutorial');
 }
 
-// ════════════════════════════════════════
+// ══════════════════════════════════════
 //  GAME FLOW
-// ════════════════════════════════════════
-function resetState() {
-  state.score = 0; state.combo = 0; state.maxCombo = 0;
-  state.correctCount = 0; state.totalCount = 0;
-  state.stageScores = [0,0,0]; state.currentStage = 0;
-  buildQuestionSets(); // 매판 새 랜덤 문제 세트
+// ══════════════════════════════════════
+function resetState(){
+  state.score=0;state.combo=0;state.maxCombo=0;
+  state.correctCount=0;state.totalCount=0;
+  state.stageScores=[0,0,0];state.currentStage=0;
+  clearTimer();
+  buildQuestionSets();
 }
 
-function startAllGames() {
-  state.stageOrder = [0,1,2];
-  resetState();
-  showScreen('screen-game');
-  loadMiniGame(state.stageOrder[0]);
-}
+function startAllGames(){state.stageOrder=[0,1,2];resetState();showScreen('screen-game');loadMiniGame(0);}
+function startMiniGame(idx){state.stageOrder=[idx];resetState();showScreen('screen-game');loadMiniGame(idx);}
 
-function startMiniGame(idx) {
-  state.stageOrder = [idx];
-  resetState();
-  showScreen('screen-game');
-  loadMiniGame(idx);
-}
-
-function loadMiniGame(gameIdx) {
+function loadMiniGame(gameIdx){
+  state.currentGameIdx=gameIdx;
   updateHeader();
-  document.getElementById('gameArea').innerHTML = '';
-  if (gameIdx === 0) renderShelfGame();
-  else if (gameIdx === 1) renderPairGame();
+  document.getElementById('gameArea').innerHTML='';
+  // [BUG FIX] 타임어택 게임(0:선반, 2:용역)은 문제 전환 시 타이머를 유지해야 함.
+  // 짝꿍(1) 또는 스테이지 첫 진입 시에만 clearTimer 처리 (startTimer 호출 시점에 !state.timerInterval 조건으로 제어)
+  if(gameIdx===1) clearTimer();
+  const tw=document.getElementById('timerBarWrap');
+  tw.style.display=gameIdx===1?'none':'block'; // 짝꿍은 타이머 바 숨김
+  if(gameIdx===0) renderShelfGame();
+  else if(gameIdx===1) renderPairGame();
   else renderSwipeGame();
 }
 
-function nextQuestion() {
-  const g = state.stageOrder[state.currentStage];
-  const keys = ['shelf','pair','swipe'];
-  const key = keys[g];
+function nextQuestion(){
+  const g=state.stageOrder[state.currentStage];
+  const keys=['shelf','pair','swipe'];
+  const key=keys[g];
+  // [BUG FIX] 타임어택 게임에서 타이머 만료 후 피드백 팝업 onDismiss 콜백이
+  // 뒤늦게 nextQuestion을 호출하는 경우 무시 (timerLeft<=0이고 interval 없음)
+  if(GAME_TIME[key]>0 && !state.timerInterval && state.timerLeft<=0) return;
   state.qIdx[key]++;
-  if (state.qIdx[key] >= state.questions[key].length) finishStage();
-  else loadMiniGame(g);
+  if(g===1){
+    // 짝꿍 찾기: 문제 수 제한 (12문제 후 스테이지 종료)
+    if(state.qIdx[key]>=state.questions[key].length) finishStage();
+    else loadMiniGame(g);
+  } else {
+    // 선반·용역: 타임어택 → 문제 소진 시 재셔플
+    if(state.qIdx[key]>=state.questions[key].length){
+      state.questions[key]=shuffle(DB[key]);
+      state.qIdx[key]=0;
+    }
+    loadMiniGame(g);
+  }
 }
 
-function finishStage() {
-  const g = state.stageOrder[state.currentStage];
-  const names = ['선반 정리','짝꿍 찾기','용역 레이더'];
-  const emojis = ['🏷️','🤝','⚡'];
-  document.getElementById('stEmoji').textContent = emojis[g];
-  document.getElementById('stTitle').textContent = `${names[g]} 완료!`;
-  document.getElementById('stPts').textContent   = `+${state.stageScores[state.currentStage].toLocaleString()}점 획득!`;
+function finishStage(){
+  // [BUG FIX] 타임어택 만료 시 열려 있을 수 있는 피드백 팝업 강제 닫기
+  // (dismiss 콜백의 onDismiss가 nextQuestion을 호출하지 못하도록 nextQuestion 가드와 함께 동작)
+  document.getElementById('fbPopup').classList.remove('show');
+  document.getElementById('fbOverlay').classList.remove('show');
+  const g=state.stageOrder[state.currentStage];
+  const names=['선반 정리','짝꿍 찾기','용역 레이더'];
+  const emojis=['🏷️','🤝','⚡'];
+  document.getElementById('stEmoji').textContent=emojis[g];
+  document.getElementById('stTitle').textContent=`${names[g]} 완료!`;
+  document.getElementById('stPts').textContent=`+${state.stageScores[state.currentStage].toLocaleString()}점 획득!`;
 
-  const isLast = state.currentStage >= state.stageOrder.length - 1;
-  const btn = document.getElementById('stBtn');
-  if (isLast) {
-    document.getElementById('stNext').textContent = '모든 스테이지를 완료했어요! 🎊';
-    btn.textContent = '🏆 결과 보기';
-    btn.onclick = () => { document.getElementById('stageTrans').classList.remove('show'); finishGame(); };
+  const isLast=state.currentStage>=state.stageOrder.length-1;
+  const btn=document.getElementById('stBtn');
+  if(isLast){
+    document.getElementById('stNext').textContent='모든 스테이지를 완료했어요! 🎊';
+    btn.textContent='🏆 결과 보기';
+    btn.onclick=()=>{document.getElementById('stageTrans').classList.remove('show');finishGame();};
   } else {
-    const nextG = state.stageOrder[state.currentStage + 1];
-    document.getElementById('stNext').textContent = `다음: ${names[nextG]} 게임`;
-    btn.textContent = '다음 스테이지 →';
-    btn.onclick = () => {
+    const nextG=state.stageOrder[state.currentStage+1];
+    document.getElementById('stNext').textContent=`다음: ${names[nextG]} 게임`;
+    btn.textContent='다음 스테이지 →';
+    btn.onclick=()=>{
       document.getElementById('stageTrans').classList.remove('show');
       state.currentStage++;
       loadMiniGame(state.stageOrder[state.currentStage]);
@@ -711,245 +888,290 @@ function finishStage() {
   document.getElementById('stageTrans').classList.add('show');
 }
 
-async function finishGame() {
+async function finishGame(){
   showScreen('screen-result');
-  const acc = state.totalCount > 0 ? Math.round(state.correctCount / state.totalCount * 100) : 0;
-  document.getElementById('resEmoji').textContent   = state.score >= 1500 ? '🏆' : state.score >= 800 ? '🎉' : '😊';
-  document.getElementById('resNickname').textContent = `${state.nickname}님의 기록`;
-  document.getElementById('resScore').textContent   = state.score.toLocaleString();
-  document.getElementById('resCorrect').textContent = state.correctCount;
-  document.getElementById('resAcc').textContent     = `${acc}%`;
-  document.getElementById('resCombo').textContent   = state.maxCombo;
+  const g=state.currentGameIdx;
+  const gameNames=['🏷️ 선반 정리','🤝 짝꿍 찾기','⚡ 용역 레이더'];
+  const acc=state.totalCount>0?Math.round(state.correctCount/state.totalCount*100):0;
+
+  document.getElementById('resEmoji').textContent=state.score>=1500?'🏆':state.score>=800?'🎉':'😊';
+  document.getElementById('resTitle').textContent='게임 완료!';
+  document.getElementById('resNickname').textContent=`${state.nickname}님의 기록`;
+  document.getElementById('resScore').textContent=state.score.toLocaleString();
+  document.getElementById('resScoreLbl').textContent='최종 점수';
+  document.getElementById('resCorrect').textContent=state.correctCount;
+  document.getElementById('resAcc').textContent=`${acc}%`;
+  document.getElementById('resCombo').textContent=state.maxCombo;
+  document.getElementById('highScoreBadge').innerHTML='';
   spawnConfetti();
 
-  if (IS_CONFIGURED) {
+  // 마지막 스테이지 게임 기준으로 랭킹 표시
+  const lastG=state.stageOrder[state.stageOrder.length-1];
+  const lastKey=GAME_KEYS[lastG];
+  document.getElementById('resRankTitle').textContent=`🏆 ${gameNames[lastG]} 랭킹`;
+
+  if(IS_CONFIGURED){
     showLoading('점수 저장 중…');
-    const res = await apiPost({
-      action: 'saveScore', nickname: state.nickname,
-      score: state.score, correct: state.correctCount,
-      accuracy: acc, maxCombo: state.maxCombo
-    });
-    hideLoading();
-    if (res && res.isHighScore) {
-      document.getElementById('highScoreBadge').innerHTML = '<span class="high-score-badge">🎊 최고 기록 갱신!</span>';
+    // 게임별로 각 점수 저장
+    for(let i=0;i<state.stageOrder.length;i++){
+      const gi=state.stageOrder[i];
+      const gkey=GAME_KEYS[gi];
+      await apiPost({action:'saveScore',game:gkey,nickname:state.nickname,score:state.stageScores[i],correct:state.correctCount,accuracy:acc,maxCombo:state.maxCombo});
     }
-    const rankData = await apiGet({ action: 'getRankings' });
-    renderFullRanking(rankData ? rankData.rankings : []);
+    hideLoading();
+    const rankData=await apiGet({action:'getRankings',game:lastKey});
+    renderResultRanking(rankData?rankData.rankings:[]);
+    // 인트로 캐시 갱신
+    loadIntroRanking();
   } else {
-    document.getElementById('fullRankList').innerHTML =
-      '<p style="font-size:12px;color:var(--text-light);text-align:center">앱스크립트 연동 후 랭킹이 표시됩니다</p>';
+    document.getElementById('resRankList').innerHTML='<p style="font-size:12px;color:var(--text-light);text-align:center">앱스크립트 연동 후 랭킹이 표시됩니다</p>';
   }
 }
 
-function renderFullRanking(rankings) {
-  const medals = ['🥇','🥈','🥉'];
-  const list = document.getElementById('fullRankList');
-  if (!rankings || !rankings.length) {
-    list.innerHTML = '<p style="text-align:center;color:var(--text-light);font-size:12px">아직 기록이 없어요</p>';
-    return;
-  }
-  list.innerHTML = rankings.slice(0,10).map((r,i) => {
-    const isMe = r.name === state.nickname;
+function renderResultRanking(rankings){
+  const list=document.getElementById('resRankList');
+  if(!rankings||!rankings.length){list.innerHTML='<p style="text-align:center;color:var(--text-light);font-size:12px">아직 기록이 없어요</p>';return;}
+  list.innerHTML=rankings.slice(0,10).map((r,i)=>{
+    const isMe=r.name===state.nickname;
     return `<div class="rank-item r${i+1} ${isMe?'me':''}">
       <span class="rank-num">${medals[i]||`${i+1}`}</span>
       <span class="rank-name">${r.name}</span>
-      ${isMe ? '<span class="rank-me-badge">나</span>' : ''}
+      ${isMe?'<span class="rank-me-badge">나</span>':''}
       <span class="rank-score">${Number(r.score).toLocaleString()}점</span>
     </div>`;
   }).join('');
 }
 
-function retryGame() {
-  resetState();
-  showScreen('screen-game');
-  loadMiniGame(state.stageOrder[0]);
+function retryGame(){resetState();showScreen('screen-game');loadMiniGame(state.stageOrder[0]);}
+function goHome(){nicknameInput.value='';btnStart.disabled=true;loadIntroRanking();showScreen('screen-intro');}
+
+// ══════════════════════════════════════
+//  TIMER (선반 정리 타임어택)
+// ══════════════════════════════════════
+function clearTimer(){
+  if(state.timerInterval){clearInterval(state.timerInterval);state.timerInterval=null;}
 }
 
-function goHome() {
-  nicknameInput.value = '';
-  btnStart.disabled = true;
-  loadIntroRanking();
-  showScreen('screen-intro');
+function startTimer(){
+  clearTimer();
+  const g=state.stageOrder[state.currentStage];
+  const totalTime=GAME_TIME[['shelf','pair','swipe'][g]];
+  state.timerLeft=totalTime;
+  updateTimerUI(totalTime);
+  state.timerInterval=setInterval(()=>{
+    state.timerLeft-=0.1;
+    updateTimerUI(totalTime);
+    if(state.timerLeft<=0){
+      state.timerLeft=0;
+      updateTimerUI(totalTime);
+      clearTimer();
+      finishStage();
+    }
+  },100);
 }
 
-// ════════════════════════════════════════
-//  MINI GAME 1: 선반 정리
-// ════════════════════════════════════════
-const SHELVES_META = [
-  {id:"economic", label:"경제재",  icon:"💰", color:"#FFB997", desc:"희소성 있음"},
-  {id:"free",     label:"자유재",  icon:"🌬️", color:"#7CC4F0", desc:"희소성 없음"},
-  {id:"production",label:"생산재", icon:"🏭", color:"#6ECFB5", desc:"생산에 사용"},
-  {id:"consumption",label:"소비재",icon:"🛒", color:"#C4A8FF", desc:"소비에 사용"}
-];
+function updateTimerUI(totalTime){
+  const fill=document.getElementById('timerBarFill');
+  const tot=totalTime||60;
+  const pct=Math.max(0,(state.timerLeft/tot)*100);
+  if(fill) fill.style.width=pct+'%';
+  const disp=document.getElementById('timerDisp');
+  if(disp){
+    const sec=Math.ceil(state.timerLeft);
+    disp.textContent=sec+'초';
+    disp.className='timer-display'+(state.timerLeft<=10?' urgent':'');
+  }
+}
 
-function renderShelfGame() {
-  const qs = state.questions.shelf;
-  const qi = state.qIdx.shelf;
-  const q  = qs[qi];
-  updateProgress(qi, qs.length);
+// ══════════════════════════════════════
+//  MINI GAME 1: 선반 정리 (타임어택 + 2선택지)
+// ══════════════════════════════════════
+function renderShelfGame(){
+  const qs=state.questions.shelf;
+  const qi=state.qIdx.shelf;
+  const q=qs[qi];
+  const shelves=SHELF_META[q.cat];
   state.totalCount++;
+  // [BUG FIX] qi===0 조건 대신 timerInterval 유무로 판단 → 문제 전환 후에도 타이머 유지
+  if(!state.timerInterval) startTimer();
 
-  document.getElementById('gameArea').innerHTML = `
-    <div class="q-dots">${makeDots(qs.length, qi)}</div>
+  document.getElementById('gameArea').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:10px">
+      <div class="shelf-score-counter">
+        <span id="shelfCorrectCount">${state.correctCount}</span>
+        <p>정답 수</p>
+      </div>
+      <div id="timerDisp" class="timer-display">${Math.ceil(state.timerLeft)}초</div>
+      <div class="shelf-score-counter">
+        <span>${state.score}</span>
+        <p>점수</p>
+      </div>
+    </div>
     <div class="q-label" style="border-color:rgba(255,185,151,.5)">
-      <h2>🏷️ 선반 정리</h2>
-      <p>재화 카드를 올바른 선반으로 드래그하거나 선반을 탭하세요!</p>
+      <h2>🏷️ 선반 정리 — ${q.cat==='scarcity'?'희소성 유무':'사용 목적'}</h2>
+      <p>올바른 선반으로 드래그하거나 탭하세요!</p>
     </div>
     <div class="drag-card" id="dragCard" draggable="true">
       <span class="card-emoji">${q.emoji}</span>
       <span class="card-name">${q.name}</span>
-      <span class="card-hint">${q.hint}</span>
+      <span class="card-context">${q.context}</span>
     </div>
-    <div class="shelves" id="shelvesWrap">
-      ${SHELVES_META.map(s => `
+    <div class="shelves-2" id="shelvesWrap">
+      ${shelves.map(s=>`
         <div class="shelf" data-shelf="${s.id}" id="shelf-${s.id}"
-          style="border-color:${s.color}80;background:${s.color}12"
-          onclick="handleShelfDrop('${s.id}',currentQ())">
-          <div class="shelf-lbl" style="color:${s.color}"><span>${s.icon}</span>${s.label}</div>
-          <div style="font-size:9px;color:var(--text-light);margin-bottom:3px">${s.desc}</div>
+          style="border-color:${s.color}90;background:${s.color}15"
+          onclick="handleShelfDrop('${s.id}')">
+          <span class="shelf-icon">${s.icon}</span>
+          <span class="shelf-lbl" style="color:${s.color}">${s.label}</span>
+          <span class="shelf-desc">${s.desc}</span>
           <div class="shelf-items" id="items-${s.id}"></div>
         </div>`).join('')}
     </div>`;
 
   setupShelfDrag();
-  SHELVES_META.forEach(s => {
-    const el = document.getElementById(`shelf-${s.id}`);
-    el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('highlight'); });
-    el.addEventListener('dragleave', () => el.classList.remove('highlight'));
-    el.addEventListener('drop', e => { e.preventDefault(); el.classList.remove('highlight'); handleShelfDrop(s.id, currentQ()); });
+  shelves.forEach(s=>{
+    const el=document.getElementById(`shelf-${s.id}`);
+    el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('highlight');});
+    el.addEventListener('dragleave',()=>el.classList.remove('highlight'));
+    el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('highlight');handleShelfDrop(s.id);});
   });
 }
 
-function currentQ() { return state.questions.shelf[state.qIdx.shelf]; }
-
-function setupShelfDrag() {
-  const card = document.getElementById('dragCard');
-  let isDragging = false, startX, startY, origLeft, origTop;
-
-  card.addEventListener('touchstart', e => {
-    const t = e.touches[0];
-    startX = t.clientX; startY = t.clientY;
-    const r = card.getBoundingClientRect();
-    origLeft = r.left; origTop = r.top;
-    isDragging = true;
-    card.classList.add('dragging');
-    card.style.left = origLeft + 'px'; card.style.top = origTop + 'px';
-    card.style.width = r.width + 'px';
+function setupShelfDrag(){
+  const card=document.getElementById('dragCard');
+  if(!card) return;
+  let isDragging=false,startX,startY,origLeft,origTop;
+  card.addEventListener('touchstart',e=>{
+    const t=e.touches[0];startX=t.clientX;startY=t.clientY;
+    const r=card.getBoundingClientRect();origLeft=r.left;origTop=r.top;
+    isDragging=true;card.classList.add('dragging');
+    card.style.left=origLeft+'px';card.style.top=origTop+'px';card.style.width=r.width+'px';
     e.preventDefault();
-  }, {passive: false});
-
-  card.addEventListener('touchmove', e => {
-    if (!isDragging) return;
-    const t = e.touches[0];
-    card.style.left = (origLeft + t.clientX - startX) + 'px';
-    card.style.top  = (origTop  + t.clientY - startY) + 'px';
+  },{passive:false});
+  card.addEventListener('touchmove',e=>{
+    if(!isDragging) return;
+    const t=e.touches[0];
+    card.style.left=(origLeft+t.clientX-startX)+'px';
+    card.style.top=(origTop+t.clientY-startY)+'px';
     e.preventDefault();
-  }, {passive: false});
-
-  card.addEventListener('touchend', e => {
-    if (!isDragging) return;
-    isDragging = false; card.classList.remove('dragging');
-    const t = e.changedTouches[0];
-    card.style.display = 'none';
-    const el = document.elementFromPoint(t.clientX, t.clientY);
-    card.style.display = '';
-    const shelf = el ? el.closest('[data-shelf]') : null;
-    if (shelf) handleShelfDrop(shelf.dataset.shelf, currentQ());
-    else { card.style.left=''; card.style.top=''; }
+  },{passive:false});
+  card.addEventListener('touchend',e=>{
+    if(!isDragging) return;
+    isDragging=false;card.classList.remove('dragging');
+    const t=e.changedTouches[0];
+    card.style.display='none';
+    const el=document.elementFromPoint(t.clientX,t.clientY);
+    card.style.display='';
+    const shelf=el?el.closest('[data-shelf]'):null;
+    if(shelf) handleShelfDrop(shelf.dataset.shelf);
+    else{card.style.left='';card.style.top='';}
   });
 }
 
-function handleShelfDrop(shelfId, q) {
-  if (!q) return;
-  document.querySelectorAll('.shelf').forEach(s => s.classList.remove('highlight'));
-  const shelf = document.getElementById(`shelf-${shelfId}`);
-  if (!shelf) return;
-  const correct = shelfId === q.shelf;
-  if (correct) {
+function handleShelfDrop(shelfId){
+  const q=state.questions.shelf[state.qIdx.shelf];
+  if(!q) return;
+  document.querySelectorAll('.shelf').forEach(s=>s.classList.remove('highlight'));
+  const shelf=document.getElementById(`shelf-${shelfId}`);
+  if(!shelf) return;
+  const correct=shelfId===q.correct;
+  if(correct){
     shelf.classList.add('correct-drop');
-    const pts = addScore(100);
-    const tag = document.createElement('div'); tag.className='shelf-tag'; tag.textContent=q.name;
-    document.getElementById(`items-${shelfId}`).appendChild(tag);
-    setTimeout(() => { showFeedback(true, pts, q.exp); shelf.classList.remove('correct-drop'); }, 180);
+    const pts=addScore(100);
+    const tag=document.createElement('div');tag.className='shelf-tag';tag.textContent=q.name;
+    document.getElementById(`items-${shelfId}`)?.appendChild(tag);
+    // 정답 수 즉시 업데이트
+    const cnt=document.getElementById('shelfCorrectCount');
+    if(cnt) cnt.textContent=state.correctCount;
+    setTimeout(()=>{
+      shelf.classList.remove('correct-drop');
+      // 피드백 없이 바로 다음 문제 (타임어택 흐름 유지)
+      // 짧은 정답 표시만
+      showQuickResult(true, pts, q.exp);
+    },150);
   } else {
-    state.combo = 0; updateHeader();
+    state.combo=0;updateHeader();
     shelf.classList.add('wrong-drop');
-    setTimeout(() => { showFeedback(false, 0, q.exp); shelf.classList.remove('wrong-drop'); }, 180);
+    setTimeout(()=>{shelf.classList.remove('wrong-drop');showQuickResult(false,0,q.exp);},150);
   }
 }
 
-// ════════════════════════════════════════
-//  MINI GAME 2: 짝꿍 찾기
-// ════════════════════════════════════════
-function renderPairGame() {
-  const qs = state.questions.pair;
-  const qi = state.qIdx.pair;
-  const q  = qs[qi];
-  updateProgress(qi, qs.length);
+// 타임어택용 간소화 피드백 (타이머 멈추지 않음)
+function showQuickResult(correct, pts, exp){
+  showFeedback(correct, pts, exp, ()=>nextQuestion());
+}
+
+// ══════════════════════════════════════
+//  MINI GAME 2: 짝꿍 찾기 (12문제 고정)
+// ══════════════════════════════════════
+function renderPairGame(){
+  const qs=state.questions.pair;
+  const qi=state.qIdx.pair;
+  const q=qs[qi];
+  updateProgress(qi,qs.length);
   state.totalCount++;
 
-  document.getElementById('gameArea').innerHTML = `
-    <div class="q-dots">${makeDots(qs.length, qi, 'var(--sky)')}</div>
+  document.getElementById('gameArea').innerHTML=`
+    <div class="q-dots">${makeDots(qs.length,qi,'var(--sky)')}</div>
     <div class="q-label" style="border-color:rgba(124,196,240,.5)">
       <h2>🤝 짝꿍 찾기</h2>
-      <p>두 재화의 관계를 선택하세요!</p>
+      <p>두 재화의 관계를 선택하세요! (${qi+1}/${qs.length})</p>
     </div>
     <div class="pair-box">
       <div class="pair-box-lbl">이 두 재화의 관계는?</div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:18px">
-        <div style="text-align:center">
-          <span style="font-size:38px">${q.a.emoji}</span>
-          <div style="font-size:15px;font-weight:700;margin-top:4px">${q.a.name}</div>
-        </div>
-        <div style="font-size:22px;color:var(--text-light)">🔗</div>
-        <div style="text-align:center">
-          <span style="font-size:38px">${q.b.emoji}</span>
-          <div style="font-size:15px;font-weight:700;margin-top:4px">${q.b.name}</div>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:16px">
+        <div style="text-align:center"><span style="font-size:36px">${q.a.emoji}</span><div style="font-size:14px;font-weight:700;margin-top:3px">${q.a.name}</div></div>
+        <div style="font-size:20px;color:var(--text-light)">🔗</div>
+        <div style="text-align:center"><span style="font-size:36px">${q.b.emoji}</span><div style="font-size:14px;font-weight:700;margin-top:3px">${q.b.name}</div></div>
       </div>
     </div>
     <div class="relation-opts">
-      ${q.choices.map(c =>
-        `<button class="rel-btn" onclick="handlePairAnswer('${c}')">${c}</button>`
-      ).join('')}
+      ${q.choices.map(c=>`<button class="rel-btn" onclick="handlePairAnswer('${c}')">${c}</button>`).join('')}
     </div>`;
 }
 
-function handlePairAnswer(chosen) {
-  const q = state.questions.pair[state.qIdx.pair];
-  const ok = chosen === q.rel;
-  document.querySelectorAll('.rel-btn').forEach(b => {
-    b.disabled = true;
-    if (b.textContent === q.rel) b.classList.add('correct');
-    else if (b.textContent === chosen && !ok) b.classList.add('wrong');
+function handlePairAnswer(chosen){
+  const q=state.questions.pair[state.qIdx.pair];
+  const ok=chosen===q.rel;
+  document.querySelectorAll('.rel-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===q.rel) b.classList.add('correct');
+    else if(b.textContent===chosen&&!ok) b.classList.add('wrong');
   });
-  if (ok) { const pts = addScore(120); setTimeout(() => showFeedback(true, pts, q.exp), 280); }
-  else { state.combo = 0; updateHeader(); setTimeout(() => showFeedback(false, 0, q.exp), 280); }
+  if(ok){const pts=addScore(120);setTimeout(()=>showFeedback(true,pts,q.exp,()=>nextQuestion()),280);}
+  else{state.combo=0;updateHeader();setTimeout(()=>showFeedback(false,0,q.exp,()=>nextQuestion()),280);}
 }
 
-// ════════════════════════════════════════
-//  MINI GAME 3: 용역 레이더
-// ════════════════════════════════════════
-function renderSwipeGame() {
-  const qs = state.questions.swipe;
-  const qi = state.qIdx.swipe;
-  const q  = qs[qi];
-  updateProgress(qi, qs.length);
+// ══════════════════════════════════════
+//  MINI GAME 3: 용역 레이더 (타임어택 1분)
+// ══════════════════════════════════════
+function renderSwipeGame(){
+  const qs=state.questions.swipe;
+  const qi=state.qIdx.swipe;
+  const q=qs[qi];
   state.totalCount++;
+  // [BUG FIX] qi===0 조건 대신 timerInterval 유무로 판단 → 문제 전환 후에도 타이머 유지
+  if(!state.timerInterval) startTimer();
 
-  document.getElementById('gameArea').innerHTML = `
-    <div class="q-dots">${makeDots(qs.length, qi, 'var(--lavender)')}</div>
+  document.getElementById('gameArea').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:10px">
+      <div class="shelf-score-counter">
+        <span id="swipeCorrectCount">${state.correctCount}</span>
+        <p>정답 수</p>
+      </div>
+      <div id="timerDisp" class="timer-display">${Math.ceil(state.timerLeft)}초</div>
+      <div class="shelf-score-counter">
+        <span>${state.score}</span>
+        <p>점수</p>
+      </div>
+    </div>
     <div class="q-label" style="border-color:rgba(196,168,255,.5)">
-      <h2>⚡ 용역 레이더</h2>
+      <h2>⚡ 용역 레이더 — 1분 타임어택!</h2>
       <p>← 재화 &nbsp;|&nbsp; 용역 →</p>
     </div>
     <div class="swipe-dir">
-      <div class="swipe-dir-item">
-        <span>👈</span><p style="color:var(--sky-dark)">재화<br>(형태 있음)</p>
-      </div>
-      <div class="swipe-dir-item">
-        <span>👉</span><p style="color:var(--coral)">용역<br>(형태 없음)</p>
-      </div>
+      <div class="swipe-dir-item"><span>👈</span><p style="color:var(--sky-dark)">재화<br>(형태 있음)</p></div>
+      <div class="swipe-dir-item"><span>👉</span><p style="color:var(--coral)">용역<br>(형태 없음)</p></div>
     </div>
     <div class="swipe-container">
       <div class="swipe-card" id="swipeCard">
@@ -964,65 +1186,65 @@ function renderSwipeGame() {
       <button class="swipe-btn left-btn" id="btnLeft" onclick="handleSwipe(false)">👈 재화</button>
       <button class="swipe-btn right-btn" id="btnRight" onclick="handleSwipe(true)">용역 👉</button>
     </div>
-    <div style="font-size:11px;color:var(--text-light);text-align:center">카드를 스와이프하거나 버튼을 눌러요</div>`;
+    <div style="font-size:10px;color:var(--text-light);text-align:center">카드를 스와이프하거나 버튼을 눌러요</div>`;
 
   setupSwipe();
 }
 
-function setupSwipe() {
-  const card = document.getElementById('swipeCard');
-  let startX = 0, dragging = false;
-
-  const onStart = x => { startX = x; dragging = true; card.classList.add('swiping'); };
-  const onMove  = x => {
-    if (!dragging) return;
-    const dx = x - startX;
-    card.style.transform = `translateX(calc(-50% + ${dx}px)) rotate(${dx*.05}deg)`;
-    document.getElementById('swipeLeft').style.opacity  = dx < -30 ? Math.min(1, Math.abs(dx)/80) : 0;
-    document.getElementById('swipeRight').style.opacity = dx >  30 ? Math.min(1, dx/80) : 0;
+function setupSwipe(){
+  const card=document.getElementById('swipeCard');
+  if(!card) return;
+  let startX=0,dragging=false;
+  const onStart=x=>{startX=x;dragging=true;card.classList.add('swiping');};
+  const onMove=x=>{
+    if(!dragging) return;
+    const dx=x-startX;
+    card.style.transform=`translateX(calc(-50% + ${dx}px)) rotate(${dx*.05}deg)`;
+    document.getElementById('swipeLeft').style.opacity=dx<-30?Math.min(1,Math.abs(dx)/80):0;
+    document.getElementById('swipeRight').style.opacity=dx>30?Math.min(1,dx/80):0;
   };
-  const onEnd = x => {
-    if (!dragging) return; dragging = false; card.classList.remove('swiping');
-    const dx = x - startX;
-    if (dx < -60) handleSwipe(false);
-    else if (dx > 60) handleSwipe(true);
-    else {
-      card.style.transform = 'translateX(-50%)';
-      document.getElementById('swipeLeft').style.opacity = 0;
-      document.getElementById('swipeRight').style.opacity = 0;
-    }
+  const onEnd=x=>{
+    if(!dragging) return;dragging=false;card.classList.remove('swiping');
+    const dx=x-startX;
+    if(dx<-60) handleSwipe(false);
+    else if(dx>60) handleSwipe(true);
+    else{card.style.transform='translateX(-50%)';document.getElementById('swipeLeft').style.opacity=0;document.getElementById('swipeRight').style.opacity=0;}
   };
-
-  card.addEventListener('touchstart', e => onStart(e.touches[0].clientX), {passive:true});
-  card.addEventListener('touchmove',  e => onMove(e.touches[0].clientX),  {passive:true});
-  card.addEventListener('touchend',   e => onEnd(e.changedTouches[0].clientX));
-  card.addEventListener('mousedown',  e => onStart(e.clientX));
-  document.addEventListener('mousemove', e => { if(dragging) onMove(e.clientX); });
-  document.addEventListener('mouseup',   e => { if(dragging) onEnd(e.clientX); });
+  card.addEventListener('touchstart',e=>onStart(e.touches[0].clientX),{passive:true});
+  card.addEventListener('touchmove', e=>onMove(e.touches[0].clientX), {passive:true});
+  card.addEventListener('touchend',  e=>onEnd(e.changedTouches[0].clientX));
+  card.addEventListener('mousedown', e=>onStart(e.clientX));
+  document.addEventListener('mousemove',e=>{if(dragging)onMove(e.clientX);});
+  document.addEventListener('mouseup',  e=>{if(dragging)onEnd(e.clientX);});
 }
 
-function handleSwipe(isService) {
-  const q = state.questions.swipe[state.qIdx.swipe];
-  document.getElementById('btnLeft').disabled  = true;
-  document.getElementById('btnRight').disabled = true;
-  const card = document.getElementById('swipeCard');
-  if (card) card.classList.add(isService ? 'swipe-right' : 'swipe-left');
-  const ok = isService === q.isService;
-  if (ok) { const pts = addScore(100); setTimeout(() => showFeedback(true, pts, q.exp), 280); }
-  else { state.combo = 0; updateHeader(); setTimeout(() => showFeedback(false, 0, q.exp), 280); }
+function handleSwipe(isService){
+  const q=state.questions.swipe[state.qIdx.swipe];
+  if(!q) return;
+  const btnL=document.getElementById('btnLeft');
+  const btnR=document.getElementById('btnRight');
+  if(btnL) btnL.disabled=true;
+  if(btnR) btnR.disabled=true;
+
+  const card=document.getElementById('swipeCard');
+  if(card) card.classList.add(isService?'swipe-right':'swipe-left');
+
+  const ok=isService===q.isService;
+  const proceed=()=>nextQuestion();
+  if(ok){
+    const pts=addScore(100);
+    const cnt=document.getElementById('swipeCorrectCount');
+    if(cnt) cnt.textContent=state.correctCount;
+    setTimeout(()=>showFeedback(true,pts,q.exp,proceed),280);
+  } else {
+    state.combo=0;updateHeader();
+    setTimeout(()=>showFeedback(false,0,q.exp,proceed),280);
+  }
 }
 
-// ════════════════════════════════════════
-//  SETUP GUIDE
-// ════════════════════════════════════════
-function showSetupGuide() {
-  alert(`📋 구글 앱스크립트 배포 방법\n\n1. 구글 스프레드시트 새 파일 생성\n2. 확장 프로그램 > Apps Script 클릭\n3. Code.gs 파일의 코드 전체 붙여넣기\n4. 저장 후 [배포 > 새 배포] 클릭\n5. 종류: '웹 앱' 선택\n   실행 계정: 나\n   액세스: '모든 사용자'\n6. 배포 후 URL 복사\n7. 이 HTML 파일 상단의\n   SCRIPT_URL = '여기에 붙여넣기'`);
-  return false;
-}
-
-// ════════════════════════════════════════
+// ══════════════════════════════════════
 //  INIT
-// ════════════════════════════════════════
+// ══════════════════════════════════════
 loadIntroRanking();
 </script>
 </body>
